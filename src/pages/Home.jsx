@@ -8,9 +8,8 @@ const Home = () => {
 
   return (
     <div style={{ width: '85%', maxWidth: '700px', margin: '20px auto 0 auto' }}>
-      <TeamHeader />
-      <div style={{ width: '117.65%', height: '0px', border: '1.5px solid rgba(255, 255, 255, 0.3)', borderRadius: '10px', marginBottom: '20px', marginLeft: '-8.825%' }}></div>
-      <TimeReamining />
+      <TeamHeader totalPoints={100} members={[{name: 'John'}, {name: 'Jane'}, {name: 'Jim'}]} />
+      <TimeReamining startTime={new Date().getTime() + 360000} finishTime={new Date().getTime() + 370000} />
       <div style={{ marginBottom: '40px' }}>
         {items.map((item, index) => (
           <div key={index}>
@@ -22,6 +21,7 @@ const Home = () => {
           </div>
         ))}
       </div>
+      <p style={{ fontFamily: "'K2D', sans-serif", fontSize: '14px', color: 'white', textAlign: 'center', marginTop: '10px', marginBottom: '20px' }}>made with 💜 by nate for LPA</p>
     </div>
   );
 };
