@@ -60,6 +60,7 @@ const CountdownOverlay = ({ onComplete, allPlayers, teamPlayers }) => {
   const [count, setCount] = React.useState(3);
   const [showingTeam, setShowingTeam] = React.useState(false);
   const [currentNames, setCurrentNames] = React.useState([]);
+  const [locked, setLocked] = React.useState(Array(teamPlayers.length).fill(false));
   
   React.useEffect(() => {
     if (count > 0) {
@@ -72,10 +73,22 @@ const CountdownOverlay = ({ onComplete, allPlayers, teamPlayers }) => {
       
       const shuffleInterval = setInterval(() => {
         if (iterations < maxIterations) {
-          // Generate random names for each team slot
-          const randomNames = Array(teamPlayers.length).fill(null).map(() => 
-            allPlayers[Math.floor(Math.random() * allPlayers.length)]
+          // Calculate how many names should be locked based on progress
+          const progress = iterations / maxIterations;
+          const numToLock = Math.floor(progress * teamPlayers.length);
+          
+          // Update locked array
+          const newLocked = Array(teamPlayers.length).fill(false);
+          for (let i = 0; i < numToLock; i++) {
+            newLocked[i] = true;
+          }
+          setLocked(newLocked);
+
+          // Generate random names, keeping locked positions fixed
+          const randomNames = Array(teamPlayers.length).fill(null).map((_, index) => 
+            newLocked[index] ? teamPlayers[index] : allPlayers[Math.floor(Math.random() * allPlayers.length)]
           );
+          
           setCurrentNames(randomNames);
           iterations++;
         } else {
