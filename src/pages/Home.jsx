@@ -1,23 +1,92 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ListItem } from '../components/ItemComponents';
-import { TeamHeader, TimeReamining } from '../components/HomeComponents';
+import { TeamHeader, TimeRemaining } from '../components/HomeComponents';
+import { getPackItems, isItemFound, numberTeamsFound } from '../utils/db';
+import { useGame } from '../contexts/GameContext';
+import { getDoc, doc } from 'firebase/firestore';
+import { db, auth } from '../utils/firebase';
 
 const Home = () => {
-  // Create an array of indices for demonstration
-  const items = Array.from({ length: 20 }, (_, index) => index);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [finishTime, setFinishTime] = useState(null);
+  const { gameCode } = useGame();
+  const [user, setUser] = useState(auth.currentUser);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!gameCode || !user) {
+          return;
+        }
+
+        const [itemsData, gameDoc] = await Promise.all([
+          getPackItems(1, user.uid),
+          getDoc(doc(db, 'games', gameCode))
+        ]);
+        
+        setItems(itemsData);
+        const endAt = gameDoc.data()?.end_at;
+        setFinishTime(endAt?.toMillis());
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const checkUser = () => {
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        setUser(currentUser);
+        fetchData();
+      } else {
+        setTimeout(checkUser, 1000);
+      }
+    };
+
+    checkUser();
+
+    return () => {
+      // setLoading(false);
+    };
+  }, [gameCode, user]);
+
+  if (loading) {
+    return (
+      <div style={{ 
+        width: '85%', 
+        maxWidth: '700px', 
+        margin: '20px auto 0 auto',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '50vh',
+        fontFamily: "'K2D', sans-serif",
+        color: 'white'
+      }}>
+        <div style={{ fontSize: '24px', marginBottom: '10px' }}>Loading Hunt Items...</div>
+        <div style={{ fontSize: '14px' }}>Please wait while we gather everything</div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ width: '85%', maxWidth: '700px', margin: '20px auto 0 auto' }}>
-      <TeamHeader totalPoints={100} members={[{name: 'John'}, {name: 'Jane'}, {name: 'Jim'}]} />
-      <TimeReamining startTime={new Date().getTime() + 360000} finishTime={new Date().getTime() + 370000} />
+      <TeamHeader />
+      <TimeRemaining finishTime={finishTime} />
       <div style={{ marginBottom: '40px' }}>
-        {items.map((item, index) => (
-          <div key={index}>
-            <ListItem />
-            {index < items.length - 1 && (
-              // Add a line between items if it's not the last item
-              <div style={{ width: '100%', height: '0px', border: '1.5px solid rgba(255, 255, 255, 0.3)', borderRadius: '10px', margin: '15px 0 15px 0' }}></div>
-            )}
+        {items.map((item) => (
+          <div key={item.id}>
+            <ListItem 
+              packId={1}
+              imageRef={item.image_reference}
+              points={item.points}
+              id={item.id}
+              found={item.is_found}
+              teamsFound={item.teams_found}
+            />
           </div>
         ))}
       </div>

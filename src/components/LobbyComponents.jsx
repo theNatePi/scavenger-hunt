@@ -1,5 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { leaveGame } from "../utils/db";
+import { useGame } from "../contexts/GameContext";
+import { auth } from "../utils/firebase";
 
 const PlayerList = ({ players }) => {
   return (
@@ -36,6 +39,19 @@ const PlayerList = ({ players }) => {
 const LeaveButton = () => {
   const navigate = useNavigate();
 
+  const { gameCode } = useGame();
+
+  const handleLeaveGame = async () => {
+    // Call the database function to handle player leaving
+    try {
+      await leaveGame(gameCode, auth.currentUser.uid); // Replace with your actual DB function
+      navigate('/'); // Navigate to the home or main page after leaving
+    } catch (error) {
+      console.error("Error leaving the game:", error);
+      // Handle error (e.g., show a message to the user)
+    }
+  };
+
   return (
     <div style={{ 
       height: '35px', 
@@ -51,7 +67,7 @@ const LeaveButton = () => {
       maxWidth: '700px',
       width: '85%',
     }}>
-      <h2 onClick={() => navigate('/')} style={{ margin: '0', lineHeight: '30px', fontSize: '15px' }}>Leave Game</h2>
+      <h2 onClick={handleLeaveGame} style={{ margin: '0', lineHeight: '30px', fontSize: '15px' }}>Leave Game</h2>
     </div>
   );
 };
