@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { useGame } from '../contexts/GameContext';
 
 const Start = () => {
-  // const [gameCode, setGameCode] = useState('');
   const [name, setName] = useState('');
   const [joinErr, setJoinErr] = useState('');
   const [returningUser, setReturningUser] = useState(false);
