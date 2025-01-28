@@ -30,11 +30,3 @@
   transform: translateX(-35%);
   transition: transform 0.3s ease;
 }
-
-a {
-  color: rgba(125, 125, 223, 0.7);
-
-  &:visited {
-    color: rgba(194, 125, 223, 0.7);
-  }
-}

@@ -25,3 +25,12 @@ html, body {
   touch-action: pan-y pinch-zoom;
   -webkit-overflow-scrolling: touch;
 }
+
+a {
+  color: rgba(125, 125, 223, 0.7);
+
+  &:visited {
+    color: rgba(194, 125, 223, 0.7);
+  }
+}
+
