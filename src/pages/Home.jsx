@@ -90,7 +90,7 @@ const Home = () => {
           </div>
         ))}
       </div>
-      <p style={{ fontFamily: "'K2D', sans-serif", fontSize: '14px', color: 'white', textAlign: 'center', marginTop: '10px', marginBottom: '20px' }}>made with 💜 by nate for LPA</p>
+      <p style={{ fontFamily: "'K2D', sans-serif", fontSize: '14px', color: 'white', textAlign: 'center', marginTop: '10px', marginBottom: '20px' }}>made with 💜 by nate for <a href='https://ctc-uci.com/'>CTC @ UCI</a></p>
     </div>
   );
 };

@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { useGame } from '../contexts/GameContext';
 
 const Start = () => {
-  // const [gameCode, setGameCode] = useState('');
   const [name, setName] = useState('');
   const [joinErr, setJoinErr] = useState('');
   const [returningUser, setReturningUser] = useState(false);
@@ -15,34 +14,40 @@ const Start = () => {
   const { gameCode, setGameCode, setUsername } = useGame();
 
   const handleJoinGame = async () => {
-    const inGame = await playerInGame(gameCode, name);
-    if (returningUser || inGame) {
-      navigate('/lobby');
-    }
-
-    const inProgress = await gameInProgress(gameCode);
-    if (inProgress) {
-      setJoinErr("Game already started");
-      return;
-    }
-
     if (gameCode === '' || name === '') {
       setJoinErr('Please enter a game code and name');
       return;
     }
-    const res = await joinGame(gameCode, name);
-    if (res.error) {
-      setJoinErr(res.error);
-      return;
+
+    try {
+      const inGame = await playerInGame(gameCode, name);
+      if (returningUser || inGame) {
+        navigate('/lobby');
+      }
+
+      const inProgress = await gameInProgress(gameCode);
+      if (inProgress) {
+        setJoinErr("Game already started");
+        return;
+      }
+
+      const res = await joinGame(gameCode, name);
+      if (res.error) {
+        setJoinErr(res.error);
+        return;
+      }
+      if (res.existing) {
+        setReturningUser(true);
+        return;
+      }
+      setJoinErr('');
+      setUsername(name);
+      setGameCode(gameCode);
+      navigate('/lobby');
+    } catch (e) {
+      console.error(e);
+      setJoinErr('An error occurred, maybe your game code is wrong?');
     }
-    if (res.existing) {
-      setReturningUser(true);
-      return;
-    }
-    setJoinErr('');
-    setUsername(name);
-    setGameCode(gameCode);
-    navigate('/lobby');
   };
 
   return (
@@ -60,7 +65,7 @@ const Start = () => {
               color: 'white',
               fontFamily: "'K2D', sans-serif"
             }}>
-              <b><h1 style={{ fontSize: '24px', marginBottom: '15px', fontFamily: "'K2D', sans-serif", textAlign: 'center' }}>Welcome to the LPA Scavenger Hunt!</h1></b>
+              <b><h1 style={{ fontSize: '24px', marginBottom: '15px', fontFamily: "'K2D', sans-serif", textAlign: 'center' }}>Welcome to the Scavenger Hunt!</h1></b>
               <p style={{ width: '100%', textAlign: 'center', fontSize: '30px', lineHeight: '.3' }}>💜</p>
               <p style={{ fontSize: '16px', lineHeight: '1.5', marginBottom: '20px', fontFamily: "'K2D', monospace", textAlign: 'center' }}>
                 Please enter the game code you were given to join the game. Teams will be chosen at random.<br />
@@ -129,7 +134,7 @@ const Start = () => {
         </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-        <p style={{ fontFamily: "'K2D', sans-serif", fontSize: '14px', color: 'white', textAlign: 'center', marginTop: '10px', marginBottom: '20px' }}>made with 💜 by nate for LPA</p>
+        <p style={{ fontFamily: "'K2D', sans-serif", fontSize: '14px', color: 'white', textAlign: 'center', marginTop: '10px', marginBottom: '20px' }}>made with 💜 by nate for <a href='https://ctc-uci.com/'>CTC @ UCI</a></p>
         <button 
           onClick={async () => {const gameId = await createGame(); window.location.href = '/admin/start/' + gameId}}
           style={{ 
