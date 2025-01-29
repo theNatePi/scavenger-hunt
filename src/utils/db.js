@@ -362,27 +362,27 @@ export const uploadImage = async (file, itemId, auth_uid) => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
 
-    // Create an image element
-    const img = new Image();
-    img.src = URL.createObjectURL(file);
+    // Create an image element and wait for it to load properly
+    const img = await createLoadedImage(file);
     
-    // Wait for the image to load
-    await new Promise((resolve) => {
-      img.onload = () => {
-        // Set canvas dimensions to the image dimensions
-        canvas.width = img.width;
-        canvas.height = img.height;
-        // Draw the image on the canvas
-        ctx.drawImage(img, 0, 0);
-        resolve();
-      };
-    });
+    // Set canvas dimensions to the image dimensions
+    canvas.width = img.width;
+    canvas.height = img.height;
+    // Draw the image on the canvas
+    ctx.drawImage(img, 0, 0);
+
+    // Clean up the object URL to prevent memory leaks
+    URL.revokeObjectURL(img.src);
 
     // Compress the image by converting it to a Blob
-    const compressedFile = await new Promise((resolve) => {
+    const compressedFile = await new Promise((resolve, reject) => {
       canvas.toBlob((blob) => {
-        resolve(blob);
-      }, 'image/jpeg', 0.5); // Adjust quality (0.7) as needed
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject(new Error('Failed to create blob'));
+        }
+      }, 'image/jpeg', 0.5);
     });
 
     const storagePath = `foundItems/${teamId}/${itemId}`; // Define the storage path
@@ -424,6 +424,25 @@ export const uploadImage = async (file, itemId, auth_uid) => {
     throw error;
   }
 };
+
+// Helper function to properly load image
+function createLoadedImage(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+    
+    img.onload = () => {
+      resolve(img);
+    };
+    
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error('Failed to load image'));
+    };
+
+    img.src = objectUrl;
+  });
+}
 
 export const getFoundImage = async (itemId, auth_uid) => {
   const teamId = await getTeamIdFromAuth(auth_uid);
