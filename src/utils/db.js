@@ -63,7 +63,7 @@ export const getPackItems = async (packId, auth_uid) => {
   }
 };
 
-export const createGame = async () => {
+export const createGame = async (imagePack = 1) => {
   try {
     if (!auth.currentUser) {
       await initializeAuth();
@@ -73,7 +73,7 @@ export const createGame = async () => {
       active: false,
       admin_code: generateAdminCode(),
       end_at: null,
-      image_pack: 1,
+      image_pack: imagePack,
       players: [],
       teams: []
     };
@@ -158,7 +158,7 @@ export const joinGame = async (gameCode, name) => {
   }
 };
 
-export const createTeams = async (gameCode) => {
+export const createTeams = async (gameCode, maxPlayersPerTeam = null, numTeams = null) => {
   try {
     if (!auth.currentUser) {
       await initializeAuth();
@@ -171,15 +171,30 @@ export const createTeams = async (gameCode) => {
 
     const players = gameDoc.data().players;
     if (!players.length) throw new Error('No players in game');
-    if (players.length < 6) throw new Error('Need at least 6 players to create teams');
 
     // Shuffle players array
     const shuffledPlayers = [...players].sort(() => Math.random() - 0.5);
-
-    // Calculate number of teams needed (maximum of 2 teams for 6-8 players, 3 teams for 9+ players)
     const numPlayers = shuffledPlayers.length;
-    const numTeams = numPlayers >= 9 ? 3 : 2;
+
+    if ((maxPlayersPerTeam === null) && (numTeams === null)) {
+      // If the user has not chosen a method for sorting, make teams with 3 players
+      maxPlayersPerTeam = 3;
+    }
+    if (maxPlayersPerTeam !== null) {
+      // If the user has chosen a method for sorting, make teams with the chosen number of players
+      numTeams = Math.ceil(numPlayers / maxPlayersPerTeam);
+    }
+
     const teams = Array(numTeams).fill().map(() => []);
+
+    if (teams.length <= 1) {
+      throw new Error('Must form at least 2 teans, please change maxPlayersPerTeam.');
+    }
+    for (let team of teams) {
+      if (team.length <= 1) {
+        throw new Error('Teams must have at least 2 players, please change numTeams.');
+      }
+    }
 
     // Distribute players across teams
     shuffledPlayers.forEach((player, index) => {
