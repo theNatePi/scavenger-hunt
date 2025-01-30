@@ -182,18 +182,16 @@ export const createTeams = async (gameCode, maxPlayersPerTeam = null, numTeams =
     }
     if (maxPlayersPerTeam !== null) {
       // If the user has chosen a method for sorting, make teams with the chosen number of players
-      numTeams = Math.ceil(numPlayers / maxPlayersPerTeam);
+      numTeams = Math.ceil(numPlayers / maxPlayersPerTeam)
     }
+
+    numTeams = Number(numTeams);
+    maxPlayersPerTeam = Number(maxPlayersPerTeam);
 
     const teams = Array(numTeams).fill().map(() => []);
 
     if (teams.length <= 1) {
       throw new Error('Must form at least 2 teams, please change maxPlayersPerTeam.');
-    }
-    for (let team of teams) {
-      if (team.length <= 1) {
-        throw new Error('Teams must have at least 2 players, please change numTeams.');
-      }
     }
 
     // Distribute players across teams
@@ -201,6 +199,12 @@ export const createTeams = async (gameCode, maxPlayersPerTeam = null, numTeams =
       const teamIndex = index % numTeams;
       teams[teamIndex].push(player);
     });
+
+    for (let team of teams) {
+      if (team.length <= 1) {
+        throw new Error('Teams must have at least 2 players, please change numTeams.');
+      }
+    }
 
     // Create team documents and collect their IDs
     const teamsCollection = collection(db, 'teams');

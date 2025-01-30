@@ -52,8 +52,6 @@ const AdminStart = () => {
       console.error('Failed to convert end time to number:', error);
       return;
     }
-    console.log(newEndTime);
-    console.log(typeof(newEndTime));
     setEndTime(newEndTime);
   };
 
@@ -68,13 +66,23 @@ const AdminStart = () => {
   };
 
   const handleSetTeamNum = (num) => {
-    setTeamNum(num);
-    setMaxPlayers(null);
+    try {
+      setMaxPlayers(null);
+      setTeamNum(Number(num));
+    } catch (error) {
+      console.error('Failed to set team num:', error);
+      setStartErr('Failed to set team num');
+    }
   };
 
   const handleSetMaxPlayers = (num) => {
-    setMaxPlayers(num);
-    setTeamNum(null);
+    try {
+      setTeamNum(null);
+      setMaxPlayers(Number(num));
+    } catch (error) {
+      console.error('Failed to set max players:', error);
+      setStartErr('Failed to set max players');
+    }
   };
 
   const handleStartGame = async () => {
@@ -100,7 +108,7 @@ const AdminStart = () => {
 
       await createTeams(gameCode, maxPlayers, teamNum);
       setStartErr('');
-      // window.location.href = `/admin/game/${gameCode}`;
+      window.location.href = `/admin/game/${gameCode}`;
     } catch (error) {
       setStartErr(`Failed to start game: ${error}`);
     }
