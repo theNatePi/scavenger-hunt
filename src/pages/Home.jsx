@@ -21,7 +21,7 @@ const Home = () => {
         }
 
         const [itemsData, gameDoc] = await Promise.all([
-          getPackItems(1, user.uid),
+          getPackItems(2, user.uid),
           getDoc(doc(db, 'games', gameCode))
         ]);
         
@@ -80,7 +80,7 @@ const Home = () => {
         {items.map((item) => (
           <div key={item.id}>
             <ListItem 
-              packId={1}
+              packId={2}
               imageRef={item.image_reference}
               points={item.points}
               id={item.id}

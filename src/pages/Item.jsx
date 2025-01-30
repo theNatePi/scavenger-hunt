@@ -37,7 +37,7 @@ const Item = () => {
         const itemDocData = itemDoc.data();
         const packData = await getPackItems(itemDocData.image_pack);
         const itemData = packData.find(item => item.id === id);
-        const storagePath = `packs/${1}/${itemData.image_reference}.jpg`;
+        const storagePath = `packs/${2}/${itemData.image_reference}.jpg`;
         const storageRef = ref(storage, storagePath);
         const url = await getDownloadURL(storageRef);
 

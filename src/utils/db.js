@@ -63,7 +63,7 @@ export const getPackItems = async (packId, auth_uid) => {
   }
 };
 
-export const createGame = async (imagePack = 1) => {
+export const createGame = async (imagePack = 2) => {
   try {
     if (!auth.currentUser) {
       await initializeAuth();
@@ -588,7 +588,7 @@ export const getTeamsByGameForAdmin = async (gameId) => {
 
 
 export const getTeamPhotos = async (teamId) => {
-  const packId = 1;
+  const packId = 2;
 
   try {
     // Get the team document
