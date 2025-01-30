@@ -306,7 +306,7 @@ const Item = () => {
               )}
             </div>
             <div style={{padding: '0 0 10px 1px', textAlign: 'left'}}>
-              <h1 style={{ fontSize: '250%', fontWeight: 'bold', fontFamily: "'IBM Plex Sans', sans-serif", margin: '0 0 10px 0', color: 'white', textAlign: 'left', padding: '0 0 0 0' }}>{item.points} Points</h1>
+              <h1 style={{ fontSize: '250%', fontWeight: 'bold', fontFamily: "'IBM Plex Sans', sans-serif", margin: '0 0 10px 0', color: 'white', textAlign: 'left', padding: '0 0 0 0' }}>{item.points} {item.points === 1 ? (<>Point</>) : (<>Points</>)}</h1>
               <h1 style={{ fontSize: '180%', fontFamily: "'K2D', sans-serif", margin: '0 0 0 5px', letterSpacing: '0.05em', color: 'white', textAlign: 'left', padding: '0 0 0 0' }}>{item.teamsFound} {item.teamsFound === 1 ? 'Team Found' : 'Teams Found'}</h1>  
             </div>
           </div>

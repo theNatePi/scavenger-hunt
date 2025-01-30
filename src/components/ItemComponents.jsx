@@ -166,7 +166,7 @@ const ListItem = ({ packId, imageRef, points, found, teamsFound, id }) => {
               color: 'white',
               textShadow: '0 2px 4px rgba(0,0,0,0.2)',
             }}>
-              <b><p style={{ margin: '0', fontFamily: 'ibm-plex-sans, sans-serif', fontSize: '22px' }}>{points} Points</p></b>
+              <b><p style={{ margin: '0', fontFamily: 'ibm-plex-sans, sans-serif', fontSize: '22px' }}>{points} {points === 1 ? (<>Point</>) : (<>Points</>)}</p></b>
               <p style={{ margin: '0.5rem 0', fontFamily: 'K2D, sans-serif', fontSize: '18px', opacity: 0.9 }}>{found ? 'Found' : 'Not Found'}</p>
               <p style={{ margin: '0', fontFamily: 'K2D, sans-serif', fontSize: '15px', opacity: 0.8 }}>{teamsFound} {teamsFound === 1 ? 'Team Found' : 'Teams Found'}</p>
             </div>
