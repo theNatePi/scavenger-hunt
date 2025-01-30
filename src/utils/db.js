@@ -188,7 +188,7 @@ export const createTeams = async (gameCode, maxPlayersPerTeam = null, numTeams =
     const teams = Array(numTeams).fill().map(() => []);
 
     if (teams.length <= 1) {
-      throw new Error('Must form at least 2 teans, please change maxPlayersPerTeam.');
+      throw new Error('Must form at least 2 teams, please change maxPlayersPerTeam.');
     }
     for (let team of teams) {
       if (team.length <= 1) {

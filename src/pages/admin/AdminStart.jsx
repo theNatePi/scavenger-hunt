@@ -100,7 +100,7 @@ const AdminStart = () => {
 
       await createTeams(gameCode, maxPlayers, teamNum);
       setStartErr('');
-      window.location.href = `/admin/game/${gameCode}`;
+      // window.location.href = `/admin/game/${gameCode}`;
     } catch (error) {
       setStartErr(`Failed to start game: ${error}`);
     }
@@ -199,7 +199,7 @@ const AdminStart = () => {
             checked={teamSorting === 'team_num'}
             onChange={(e) => handleSortToggle(e.target.value)}
           />
-          <label htmlFor="team_size"> Sort by team size</label><br></br>
+          <label htmlFor="team_size"> Sort by num of teams</label><br></br>
           <input 
             type="radio" 
             name="sorting" 
