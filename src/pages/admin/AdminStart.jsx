@@ -12,6 +12,7 @@ const AdminStart = () => {
   const [teamNum, setTeamNum] = useState(null);
   const [maxPlayers, setMaxPlayers] = useState(null);
   const [startErr, setStartErr] = useState('');
+  const [endAt, setEndAt] = useState('default');
 
   useEffect(() => {
     const fetchGameData = async () => {
@@ -28,16 +29,36 @@ const AdminStart = () => {
     fetchGameData();
   }, [gameCode]);
 
-  const handleEndTimeChange = async (e) => {
-    const newEndTime = e.target.value;
-    setEndTime(newEndTime);
-    
+  const handleEndDateChange = async (e) => {
+    const newEndDate = e.target.value;
+    setEndTime(null);
+    // End time will be null when it is most up to date
+
     try {
-      await updateGameEndTime(gameCode, newEndTime);
+      await updateGameEndTime(gameCode, newEndDate);
     } catch (error) {
       console.error('Failed to update end time:', error);
       // You might want to add some user feedback here
     }
+  };
+
+  const handleEndTimeChange = async (e) => {
+    // If the end time is a number of min, setEndTime to be flushed
+    // when the game starts
+    let newEndTime = ''
+    try {
+      newEndTime = Number(e.target.value);
+    } catch (error) {
+      console.error('Failed to convert end time to number:', error);
+      return;
+    }
+    console.log(newEndTime);
+    console.log(typeof(newEndTime));
+    setEndTime(newEndTime);
+  };
+
+  const handleEndToggle = (value) => {
+    setEndAt(value);
   };
 
   const handleSortToggle = (num) => {
@@ -69,6 +90,14 @@ const AdminStart = () => {
       setStartErr('');
       
       setStartErr('Loading...');
+
+      if (endTime !== null) {
+        // If the endTime is not null, the end time of the came needs to be updated
+        let dateObj = new Date();
+        dateObj.setMinutes(dateObj.getMinutes() + endTime + 1);
+        await updateGameEndTime(gameCode, dateObj.toISOString());
+      }
+
       await createTeams(gameCode, maxPlayers, teamNum);
       setStartErr('');
       window.location.href = `/admin/game/${gameCode}`;
@@ -84,32 +113,75 @@ const AdminStart = () => {
       <button onClick={() => navigator.clipboard.writeText(gameCode)} style={{ background: 'rgba(99, 49, 216, 0.1)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '10px', color: 'white', padding: '10px 20px', fontFamily: "'K2D', sans-serif", fontSize: '14px', cursor: 'pointer', width: '200px', margin: '0 0 10px 0' }}>Copy Game Code</button>
       <p style={{ fontFamily: "'K2D', sans-serif", fontSize: '20px', color: 'white', textAlign: 'left', marginBottom: '20px' }}>Admin code: <span style={{ fontWeight: 'bold' }}>{adminCode}</span></p>
       <div style={{ marginBottom: '20px' }}>
+        <div style={{color: 'white'}}>
+          <h2 style={{ fontFamily: "'K2D', sans-serif", fontSize: '25px', color: 'white', textAlign: 'left', marginBottom: '5px' }}>When should the hunt end?</h2>
+          <input 
+            type="radio" 
+            name="end_time" 
+            value="default" 
+            checked={endAt === 'default'}
+            onChange={(e) => handleEndToggle(e.target.value)}
+          />
+          <label htmlFor="default"> End at specific time</label><br></br>
+          <input 
+            type="radio" 
+            name="end_time" 
+            value="time_limit" 
+            checked={endAt === 'time_limit'}
+            onChange={(e) => handleEndToggle(e.target.value)}
+          />
+          <label htmlFor="team_size"> End after number of min</label><br></br>
+        </div>
         <label 
           style={{ 
             display: 'block', 
             fontFamily: "'K2D', sans-serif", 
             fontSize: '16px', 
             color: 'white', 
+            marginTop: '10px',
             marginBottom: '10px' 
           }}
         >
           Set Hunt End Time:
         </label>
-        <input
-          type="datetime-local"
-          style={{
-            background: 'rgba(255, 255, 255, 0.1)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            borderRadius: '10px',
-            padding: '10px',
-            color: 'white',
-            fontFamily: "'K2D', sans-serif",
-            fontSize: '16px',
-            width: '100%',
-            maxWidth: '300px'
-          }}
-          onChange={handleEndTimeChange}
-        />
+        {(endAt === 'default') ? (
+          <div>
+            <input
+              type="datetime-local"
+              style={{
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '10px',
+                padding: '10px',
+                color: 'white',
+                fontFamily: "'K2D', sans-serif",
+                fontSize: '16px',
+                width: '100%',
+                maxWidth: '300px'
+              }}
+              onChange={handleEndDateChange}
+            />
+          </div>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'left', height: '50px' }}>
+            <input
+              type="number"
+              style={{
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '10px',
+                padding: '10px',
+                color: 'white',
+                fontFamily: "'K2D', sans-serif",
+                fontSize: '16px',
+                width: '50%',
+                maxWidth: '300px'
+              }}
+              onChange={handleEndTimeChange}
+            />
+            <p style={{color: 'white', fontSize: '28px', marginLeft: '10px'}}>min</p>
+          </div>
+        )}
         <div style={{color: 'white'}}>
           <h2 style={{ fontFamily: "'K2D', sans-serif", fontSize: '25px', color: 'white', textAlign: 'left', marginBottom: '5px' }}>How should teams be sorted?</h2>
           <input 
