@@ -1,5 +1,5 @@
 # Scavenger Hunt
-#### Built With 💜 By Nate For [CTC](https://ctc-uci.com/)
+#### Built With 💜 By Nate For [CTC](https://ctc-uci.com/) Socials
 A web based, mobile focused scavanger hunt app which supports multiple teams, unlimited players, user and admin views, and live point tallying.
 
 Play here [Live](https://lpa-scavengerhunt.web.app/) <br/>
