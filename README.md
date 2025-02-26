@@ -1,70 +1,47 @@
-# Getting Started with Create React App
+# Scavenger Hunt
+#### Built With 💜 By Nate For [CTC](https://ctc-uci.com/)
+A web based, mobile focused scavanger hunt app which supports multiple teams, unlimited players, user and admin views, and live point tallying.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Play here [Live](https://lpa-scavengerhunt.web.app/) <br/>
+**Note:** Images currently only include those from the UCI website. Custom image set uploads coming soon.
 
-## Available Scripts
+### Features
+- Dynamic game rooms that support any number of players
+- Anonymous authentication and re-connection to started games
+- Live cross-team updates
+- Image upload and viewing
+- Admin views for controlling game functions
+- Points system assigned per-image
 
-In the project directory, you can run:
+# App Views
 
-### `npm start`
+## Start Page
+Players can join games dynamically with a game code
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+<img src="https://github.com/user-attachments/assets/807aeeab-fd96-4ee4-aad7-4d260afa3cfa" width="200">
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Team Sorting
+Teams automatically sorted on game start
 
-### `npm test`
+<img src="https://github.com/user-attachments/assets/30e273d3-b77b-4b73-85dc-b98055362ad3" width="200">
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Home Page
+With estimated points earned, list of available items to find, stats about items, and time left
 
-### `npm run build`
+<img src="https://github.com/user-attachments/assets/aad5e0dc-cbf5-4ad5-857f-6ce5f229e29b" width="200">
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Item Page
+With image upload natively supported
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+<img src="https://github.com/user-attachments/assets/c706ec95-84a6-480d-9c27-87b1b7659b92" width="200">
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Admin Page
+Admin page which supports custom game times and player sorting
 
-### `npm run eject`
+<img src="https://github.com/user-attachments/assets/cc609396-9985-4940-a5bd-631ea0c6f82a" width="200">
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Admin Team View
+With ability to view team image submissions and time remaining
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+<img src="https://github.com/user-attachments/assets/da3b8738-d1e6-4e32-97b6-3447c44d23e8" width="200">
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
