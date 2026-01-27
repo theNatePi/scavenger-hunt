@@ -15,13 +15,13 @@ function App() {
     <Router>
       <GameProvider>
         <Routes>
-          <Route path="/" element={<Start />} />
+          {/* <Route path="/" element={<Start />} />
           <Route path="/home" element={<Home />} />
           <Route path="/item/:id" element={<Item />} />
           <Route path="/lobby" element={<Lobby />} />
           <Route path="/admin/game/:gameCode" element={<AdminGame />} />
           <Route path="/admin/team/:id" element={<AdminTeam />} />
-          <Route path="/admin/start/:gameCode" element={<AdminStart />} />
+          <Route path="/admin/start/:gameCode" element={<AdminStart />} /> */}
         </Routes>
       </GameProvider>
     </Router>
