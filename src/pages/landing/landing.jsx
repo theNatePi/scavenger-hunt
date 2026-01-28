@@ -2,6 +2,7 @@ import { useReducer, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGameContext } from '../../contexts/GameContext';
 import { nicknameChangeHandler, joinGameHandler, checkForAuthAndActiveGame } from './landingTools';
+import { isLoggedIn } from '../../utils/auth';
 import GlassContainer from '../../components/glassContainer/glassContainer';
 import GlassButton from '../../components/glassButton';
 import GlassInput from '../../components/glassInput';
@@ -49,10 +50,16 @@ export default function Landing() {
   }
 
   async function _handleJoinGame() {
+    setGameId(null);
     setShowAdminOptions(false);
     const success = await joinGameHandler(form, dispatch, setGameId);
-    setPlayer({ nickname: form.nickname });
     if (success) {
+      const uid = await isLoggedIn();
+      if (uid) {
+        setPlayer({ uid: uid, nickname: form.nickname });
+      } else {
+        alert('Failed to create user in _handleJoinGame, contact an admin');
+      }
       navigate('/lobby');
     }
   }

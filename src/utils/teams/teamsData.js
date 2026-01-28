@@ -15,6 +15,7 @@ async function uploadTeamsToGame(gameId, teams) {
     const teamData = {
       playerUIDs: team.map((player) => Object.keys(player)[0]),
       playerNicknames: team.map((player) => Object.values(player)[0]),
+      teamReady: false,
     };
 
     // Auto-ID per team doc, but committed together.

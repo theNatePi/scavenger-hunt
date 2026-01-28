@@ -4,6 +4,8 @@ import { useGame, useGameMutations } from '../hooks/useGame';
 const GameContext = createContext(null);
 
 const ACTIVE_GAME_ID_STORAGE_KEY = 'scavenger-hunt:activeGameId';
+const ACTIVE_PLAYER_STORAGE_KEY = 'scavenger-hunt:activePlayer';
+const ACTIVE_TEAM_STORAGE_KEY = 'scavenger-hunt:activeTeam';
 
 /**
  * Provides game data from Firestore to the subtree. The game code is stored in
@@ -24,8 +26,24 @@ export function GameProvider({ children, initialGameId = null, options = {} }) {
       return null;
     }
   });
-  const [team, setTeam] = useState(null);
-  const [player, setPlayer] = useState(null);
+  const [team, setTeamState] = useState(() => {
+    try {
+      const raw = window?.localStorage?.getItem(ACTIVE_TEAM_STORAGE_KEY);
+      if (raw == null || raw === '') return null;
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  });
+  const [player, setPlayerState] = useState(() => {
+    try {
+      const raw = window?.localStorage?.getItem(ACTIVE_PLAYER_STORAGE_KEY);
+      if (raw == null || raw === '') return null;
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  });
 
   const setGameId = useCallback((code) => {
     setGameCodeState((prev) => {
@@ -35,6 +53,38 @@ export function GameProvider({ children, initialGameId = null, options = {} }) {
           window?.localStorage?.removeItem(ACTIVE_GAME_ID_STORAGE_KEY);
         } else {
           window?.localStorage?.setItem(ACTIVE_GAME_ID_STORAGE_KEY, String(next));
+        }
+      } catch {
+        // ignore storage errors (private mode, blocked, etc.)
+      }
+      return next;
+    });
+  }, []);
+
+  const setTeam = useCallback((nextTeam) => {
+    setTeamState((prev) => {
+      const next = typeof nextTeam === 'function' ? nextTeam(prev) : nextTeam;
+      try {
+        if (next == null) {
+          window?.localStorage?.removeItem(ACTIVE_TEAM_STORAGE_KEY);
+        } else {
+          window?.localStorage?.setItem(ACTIVE_TEAM_STORAGE_KEY, JSON.stringify(next));
+        }
+      } catch {
+        // ignore storage errors (private mode, blocked, etc.)
+      }
+      return next;
+    });
+  }, []);
+
+  const setPlayer = useCallback((nextPlayer) => {
+    setPlayerState((prev) => {
+      const next = typeof nextPlayer === 'function' ? nextPlayer(prev) : nextPlayer;
+      try {
+        if (next == null) {
+          window?.localStorage?.removeItem(ACTIVE_PLAYER_STORAGE_KEY);
+        } else {
+          window?.localStorage?.setItem(ACTIVE_PLAYER_STORAGE_KEY, JSON.stringify(next));
         }
       } catch {
         // ignore storage errors (private mode, blocked, etc.)

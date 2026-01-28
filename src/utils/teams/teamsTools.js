@@ -1,12 +1,4 @@
-function _shuffle(array) {
-  // Use Fisher-Yates shuffle
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
-
+import { shuffle } from "../tools";
 
 function createTeams(playerIds, teamSize=undefined, numTeams=undefined) {
   if (teamSize && numTeams) {
@@ -27,7 +19,7 @@ function createTeams(playerIds, teamSize=undefined, numTeams=undefined) {
   }
 
   // Shuffle playerIds
-  playerIds = _shuffle(playerIds);
+  playerIds = shuffle(playerIds);
 
   const teams = [];
   let teamIndex = 0;

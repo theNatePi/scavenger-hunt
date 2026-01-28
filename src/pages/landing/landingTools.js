@@ -32,13 +32,13 @@ async function joinGameHandler(form, dispatch, setGameId) {
 
   const uid = await fetchOrCreateUser();
   if (!uid) {
-    setNicknameError('Failed to create user, contact an admin');
+    setNicknameError('Failed to create user in joinGameHandler, contact an admin');
     setLoading(false);
     return false;
   }
   setNicknameError('');
 
-  if (game.players.some(player => Object.keys(player).includes(uid))) {
+  if (game.players?.some(player => Object.keys(player).includes(uid))) {
     console.log('User is already in the game');
     setLoading(false);
     return false;
@@ -51,7 +51,7 @@ async function joinGameHandler(form, dispatch, setGameId) {
   }
   setGameCodeError('');
 
-  for (const player of game.players) {
+  for (const player of game.players ?? []) {
     if (Object.values(player).includes(nickname)) {
       setNicknameError('Nickname already taken');
       setLoading(false);
