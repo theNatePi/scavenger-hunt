@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback } from 'react';
-import { useGame } from '../hooks/useGame';
+import { useGame, useGameMutations } from '../hooks/useGame';
 
 const GameContext = createContext(null);
 
@@ -23,7 +23,8 @@ export function GameProvider({ children, initialGameId = null, options = {} }) {
   }, []);
 
   const snapshot = useGame(gameCode, options);
-  const value = { ...snapshot, gameCode, setGameCode, team, setTeam, player, setPlayer };
+  const actions = useGameMutations(gameCode, options);
+  const value = { ...snapshot, gameCode, setGameCode, team, setTeam, player, setPlayer, actions };
 
   return (
     <GameContext.Provider value={value}>
@@ -41,7 +42,20 @@ export function GameProvider({ children, initialGameId = null, options = {} }) {
  *   loading: boolean,
  *   error: Error | null,
  *   gameCode: string | null,
- *   setGameCode: (code: string | null | ((prev: string | null) => string | null)) => void
+ *   setGameCode: (code: string | null | ((prev: string | null) => string | null)) => void,
+ *   team: object | null,
+ *   setTeam: (team: object | null) => void,
+ *   player: object | null,
+ *   setPlayer: (player: object | null) => void,
+ *   actions: {
+ *     updateGame: (data: object) => Promise<void>,
+ *     addTeam: (data: object) => Promise<{ id: string }>,
+ *     updateTeam: (teamId: string, data: object) => Promise<void>,
+ *     deleteTeam: (teamId: string) => Promise<void>,
+ *     addFoundItem: (teamId: string, data: object) => Promise<{ id: string }>,
+ *     updateFoundItem: (teamId: string, itemId: string, data: object) => Promise<void>,
+ *     deleteFoundItem: (teamId: string, itemId: string) => Promise<void>,
+ *   }
  * }}
  * @throws {Error} If used outside GameProvider
  */

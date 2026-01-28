@@ -9,7 +9,7 @@ function _shuffle(array) {
 }
 
 
-export function createTeams(playerIds, teamSize=undefined, numTeams=undefined) {
+function createTeams(playerIds, teamSize=undefined, numTeams=undefined) {
   if (teamSize && numTeams) {
     throw new Error('Cannot specify both teamSize and numTeams');
   }
@@ -41,3 +41,5 @@ export function createTeams(playerIds, teamSize=undefined, numTeams=undefined) {
   console.log(teams);
   return teams;
 }
+
+export { createTeams };

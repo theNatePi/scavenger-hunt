@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useGameContext } from '../contexts/GameContext';
+import { createGame } from '../utils/game';
 
 /**
  * Example: set game code once from URL (?game=xxx) or leave default.
@@ -26,6 +27,11 @@ export default function Playground() {
       <p>Game: {game?.createdBy ?? '—'}</p>
       <p>Players (per team): {game?.teams?.map((team) => team.playerIds?.join(', ') ?? team.id).join(' · ') ?? '—'}</p>
       <p>Found items (per team): {game?.teams?.map((t) => `${t.name ?? t.id}: ${t.foundItems?.length ?? 0}`).join(' · ') ?? '—'}</p>
+
+      <button onClick={async () => {
+        const docId = await createGame();
+        console.log(docId);
+      }}>Create Game</button>
     </div>
   );
 }
