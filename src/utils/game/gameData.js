@@ -12,14 +12,13 @@ async function createGame(packId = 'default') {
     packId: packId,
     status: 'not_started',
     endTime: new Date(Date.now() + 1000 * 60 * 60 * 24),
+    players: [],
   };
 
   // post new game to firestore
   const gamesRef = collection(db, process.env.REACT_APP_FIREBASE_GAMES_COLLECTION);
-  console.log(gamesRef);
-  console.log(game);
-  const docRef = await addDoc(gamesRef, game);
-  return docRef.id;
+  const ref = await addDoc(gamesRef, game);
+  return { ...game, id: ref.id };
 }
 
 

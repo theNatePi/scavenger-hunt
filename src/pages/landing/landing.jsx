@@ -1,4 +1,5 @@
 import { useReducer, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { nicknameChangeHandler, joinGameHandler, checkForAuthAndActiveGame } from './landingTools';
 import GlassContainer from '../../components/glassContainer/glassContainer';
 import GlassButton from '../../components/glassButton';
@@ -29,7 +30,7 @@ export default function Landing() {
   const [form, dispatch] = useReducer(formReducer, initialForm);
 
   const [showAdminOptions, setShowAdminOptions] = useState(false);
-
+  const navigate = useNavigate();
   useEffect(() => {
     async function checkForActiveGame() {
       const activeGame = await checkForAuthAndActiveGame();
@@ -58,7 +59,7 @@ export default function Landing() {
   }
 
   function _handleCreateGame() {
-    console.log('create game');
+    navigate('/admin/createGame');
   }
 
   function _handleManageGame() {

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { GameProvider } from './contexts/GameContext';
 import Playground from './pages/playground';
 import Landing from './pages/landing/landing';
+import CreateGame from './pages/admin/createGame';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <GameProvider>
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/admin/createGame" element={<CreateGame />} />
           {/* <Route path="/joinLobby" element={<></>} />
           <Route path="/joinLobby/teamReveal" element={<></>} />
           <Route path="/game" element={<></>} />
@@ -17,8 +19,7 @@ function App() {
           <Route path="/game/gameOver" element={<></>} />
           <Route path="/game/winnerReveal" element={<></>} />
 
-
-          <Route path="/admin/createGame" element={<></>} />
+        
           <Route path="/admin/runGame" element={<></>} />
           <Route path="/admin/runGame/team/:id" element={<></>} />
           <Route path="/admin/runGame/team/:id/item/:id" element={<></>} /> */}

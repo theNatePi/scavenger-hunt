@@ -29,8 +29,8 @@ export default function Playground() {
       <p>Found items (per team): {game?.teams?.map((t) => `${t.name ?? t.id}: ${t.foundItems?.length ?? 0}`).join(' · ') ?? '—'}</p>
 
       <button onClick={async () => {
-        const docId = await createGame();
-        console.log(docId);
+        const result = await createGame();
+        console.log(result);
       }}>Create Game</button>
     </div>
   );

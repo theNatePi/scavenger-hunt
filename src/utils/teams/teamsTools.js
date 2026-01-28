@@ -15,10 +15,15 @@ function createTeams(playerIds, teamSize=undefined, numTeams=undefined) {
   if (teamSize === undefined && numTeams === undefined) {
     throw new Error('Must specify either teamSize or numTeams');
   }
+  if (playerIds.length < 4) {
+    throw new Error('Must have at least 4 players');
+  }
 
   if (numTeams === undefined) {
     // round to nearest integer
-    numTeams = Math.round(playerIds.length / teamSize);
+    numTeams = Math.round(playerIds.length / Number(teamSize));
+  } else {
+    numTeams = Number(numTeams);
   }
 
   // Shuffle playerIds
@@ -37,7 +42,20 @@ function createTeams(playerIds, teamSize=undefined, numTeams=undefined) {
     teams[teamIndex].push(playerId);
     teamIndex++;
   }
+
+  console.log(numTeams);
   console.log(teams);
+
+  for (const team of teams) {
+    if (team.length <= 1) {
+      throw new Error('Your values produce teams which are too small');
+    }
+  }
+
+  if (teams.length <= 1) {
+    throw new Error('Your values produce <= 1 team');
+  }
+
   return teams;
 }
 
