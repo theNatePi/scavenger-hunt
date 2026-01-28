@@ -4,8 +4,8 @@ import ShuffleReveal from '../components/ShuffleReveal';
 import GlassButton from '../components/glassButton';
 
 export default function TeamReveal() {
-  const [teamReady, setTeamReady] = useState(false);
   const { game, player, team, setTeam, actions } = useGameContext();
+  const [teamReady, setTeamReady] = useState(false);
 
   const revealTime = 1;
   const revealOffset = 0.5;
@@ -34,14 +34,15 @@ export default function TeamReveal() {
 
     if (!nickname || !Array.isArray(teams)) return;
 
-    // If we already have the right team in context, don't update again.
-    if (team?.playerNicknames?.includes?.(nickname)) return;
-
     const foundTeam =
       teams.find((t) => Array.isArray(t?.playerNicknames) && t.playerNicknames.includes(nickname)) ??
       null;
 
+    // If we already have the right team in context, don't update again.
+    if (team?.playerNicknames?.includes?.(nickname) && team?.teamReady === foundTeam?.teamReady) return;
+
     setTeam(foundTeam);
+    setTeamReady(foundTeam?.teamReady);
   }, [game?.teams, player?.nickname, setTeam, team]);
 
   return (
