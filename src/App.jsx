@@ -5,6 +5,7 @@ import Playground from './pages/playground';
 import Landing from './pages/landing/landing';
 import CreateGame from './pages/admin/createGame';
 import Lobby from './pages/Lobby';
+import TeamReveal from './pages/teamReveal';
 
 function App() {
   return (
@@ -14,8 +15,8 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/admin/createGame" element={<CreateGame />} />
           <Route path="/lobby" element={<Lobby />} />
-          {/* <Route path="/joinLobby" element={<></>} />
-          <Route path="/joinLobby/teamReveal" element={<></>} />
+          <Route path="/lobby/teamReveal" element={<TeamReveal />} />
+          {/* <Route path="/joinLobby/teamReveal" element={<></>} />
           <Route path="/game" element={<></>} />
           <Route path="/game/item/:id" element={<></>} />
           <Route path="/game/gameOver" element={<></>} />

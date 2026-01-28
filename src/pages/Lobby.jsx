@@ -1,16 +1,25 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useGameContext } from '../contexts/GameContext';
 import GlassContainer from '../components/glassContainer/glassContainer';
+import CountdownOverlay from '../components/countdownOverlay';
 
 export default function Lobby() {
-  const { game } = useGameContext();
+  const [showCountdown, setShowCountdown] = useState(false);
+  const { game, setTeam, setPlayer } = useGameContext();
 
   useEffect(() => {
-    console.log(game);
+    // Reset team when the player connects
+    setTeam(null);
+  }, []);
+
+  useEffect(() => {
+    if (game?.status === 'teams_created') {
+      setShowCountdown(true);
+    }
   }, [game]);
 
   return (
-    <div>
+    <CountdownOverlay showCountdown={showCountdown}>
       <h1
         style={{ marginBottom: '35px' }}
       >
@@ -78,6 +87,6 @@ export default function Lobby() {
       </div>
       {/* <p>Game Name: {game.name}</p> */}
       {/* <p>Game status: {game.status}</p> */}
-    </div>
+    </CountdownOverlay>
   );
 }
