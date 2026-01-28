@@ -1,22 +1,37 @@
-import { useState } from 'react';
+import { useReducer } from 'react';
 import { nicknameChangeHandler, joinGameHandler } from './landingTools';
 import GlassContainer from '../../components/glassContainer/glassContainer';
 import GlassButton from '../../components/glassButton';
 import GlassInput from '../../components/glassInput';
 
+const initialForm = {
+  nickname: '',
+  nicknameError: null,
+  typedGameCode: '',
+  gameCodeError: null,
+  isLoading: false,
+};
+
+function formReducer(state, action) {
+  switch (action.type) {
+    case 'nickname': return { ...state, nickname: action.value, nicknameError: action.error ?? state.nicknameError };
+    case 'nicknameError': return { ...state, nicknameError: action.value };
+    case 'gameCode': return { ...state, typedGameCode: action.value };
+    case 'gameCodeError': return { ...state, gameCodeError: action.value };
+    case 'loading': return { ...state, isLoading: action.value };
+    default: return state;
+  }
+}
+
 export default function Landing() {
-  const [nickname, setNickname] = useState('');
-  const [nicknameError, setNicknameError] = useState(null);
-  const [typedGameCode, setTypedGameCode] = useState('');
-  const [gameCodeError, setGameCodeError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [form, dispatch] = useReducer(formReducer, initialForm);
 
   function _handleNicknameChange(e) {
-    nicknameChangeHandler(e.target.value, setNickname, setNicknameError);
+    nicknameChangeHandler(e.target.value, dispatch);
   }
 
   async function _handleJoinGame() {
-    joinGameHandler(nickname, typedGameCode, setIsLoading, setNicknameError, setGameCodeError);
+    await joinGameHandler(form, dispatch);
   }
 
   return (
@@ -43,8 +58,8 @@ export default function Landing() {
           You will be tasked with finding and photographing items nearby. Remember to say safe, and have fun!
         </p>
       </GlassContainer>
-      <GlassInput placeholder="Nickname" value={nickname} onChange={_handleNicknameChange} />
-      {nicknameError && 
+      <GlassInput placeholder="Nickname" value={form.nickname} onChange={_handleNicknameChange} />
+      {form.nicknameError && 
         <p 
           style={{ 
             color: '#000000BB',
@@ -54,11 +69,11 @@ export default function Landing() {
             marginLeft: '40px',
           }}
         >
-          {nicknameError}
+          {form.nicknameError}
         </p>
       }
-      <GlassInput placeholder="Game Code" value={typedGameCode} onChange={(e) => setTypedGameCode(e.target.value)} />
-      {gameCodeError && 
+      <GlassInput placeholder="Game Code" value={form.typedGameCode} onChange={(e) => dispatch({ type: 'gameCode', value: e.target.value })} />
+      {form.gameCodeError && 
         <p 
           style={{ 
             color: '#000000BB',
@@ -68,12 +83,12 @@ export default function Landing() {
             marginLeft: '40px',
           }}
         >
-          {gameCodeError}
+          {form.gameCodeError}
         </p>
       }
       <GlassButton 
         onClick={_handleJoinGame}
-        isLoading={isLoading}
+        isLoading={form.isLoading}
         style={{  
           backgroundColor: 'var(--confirm-color-transparent)' }}
       >
@@ -85,6 +100,12 @@ export default function Landing() {
       >
         Manage Game
       </GlassButton>
+
+
+      <div style={{ display: 'flex', gap: '0px' }}>
+        <GlassButton style={{ width: '100%', marginRight: '10px' }}>one</GlassButton>
+        <GlassButton style={{ width: '100%', marginLeft: '10px' }}>two</GlassButton>
+      </div>
     </div>
   );
 }

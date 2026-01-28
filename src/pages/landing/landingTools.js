@@ -3,87 +3,72 @@ import { getGameByCode } from '../../utils/game/gameData';
 import { fetchOrCreateUser } from '../../utils/auth';
 import { addPlayerToGame } from '../../utils/game/gameData';
 
-function nicknameChangeHandler(value, setNickname, setNicknameError) {
-  // Handle nickname change and update error state
+function nicknameChangeHandler(value, dispatch) {
   const { showError, error } = validateNickname(value);
-  if (showError) {
-    setNicknameError(error);
-    return;
-  }
-  setNickname(value);
-  setNicknameError('');
+  dispatch({ type: 'nickname', value, error: showError ? error : '' });
 }
 
-  async function joinGameHandler(nickname, typedGameCode, setIsLoading, setNicknameError, setGameCodeError) {
-    setIsLoading(true);
-    // Validate the nickname a final time
-    //   this is re-run to catch errors ignored on initial entry
-    const { error } = validateNickname(nickname);
-    if (error) {
-      setNicknameError(error);
-      setIsLoading(false);
-      return;
-    } 
+async function joinGameHandler(form, dispatch) {
+  const { nickname, typedGameCode } = form;
+  const setLoading = (v) => dispatch({ type: 'loading', value: v });
+  const setNicknameError = (v) => dispatch({ type: 'nicknameError', value: v });
+  const setGameCodeError = (v) => dispatch({ type: 'gameCodeError', value: v });
 
-    // Validate the game code
-    const game = await getGameByCode(typedGameCode);
-    if (!game) {
-      setGameCodeError('Game not found');
-      setIsLoading(false);
-      return;
-    } else {
-      setGameCodeError('');
-    }
-
-    // TODO: Log the player into auth and check if they are reconnecting
-
-    const uid = await fetchOrCreateUser();
-    if (!uid) {
-      setNicknameError('Failed to create user, contact an admin');
-      setIsLoading(false);
-      return;
-    } else {
-      setNicknameError('');
-    }
-
-    // If the user is already in the game, redirect to the play page
-    if (game.players.some(player => Object.keys(player).includes(uid))) {
-      console.log('User is already in the game');
-      // TODO: redirect to the play page
-      return;
-    }
-
-    // Check if the game is already started
-    if (game.status !== 'not_started') {
-      setGameCodeError('Game is already started');
-      setIsLoading(false);
-      return;
-    } else {
-      setGameCodeError('');
-    }
-
-    // Check if the username is already taken
-    for (const player of game.players) {
-      if (Object.values(player).includes(nickname)) {
-        setNicknameError('Nickname already taken');
-        setIsLoading(false);
-        return;
-      }
-    }
-
-    setNicknameError('');
-
-    // Finally, add the user to the game
-    try {
-      await addPlayerToGame(typedGameCode, uid, nickname);
-      // TODO: redirect to the play page
-    } catch (error) {
-      setGameCodeError('Failed to add player to game, contact an admin');
-      setIsLoading(false);
-      return;
-    }
-    setGameCodeError('');
-    setIsLoading(false);
+  setLoading(true);
+  const { error } = validateNickname(nickname);
+  if (error) {
+    setNicknameError(error);
+    setLoading(false);
+    return;
   }
+
+  const game = await getGameByCode(typedGameCode);
+  if (!game) {
+    setGameCodeError('Game not found');
+    setLoading(false);
+    return;
+  }
+  setGameCodeError('');
+
+  const uid = await fetchOrCreateUser();
+  if (!uid) {
+    setNicknameError('Failed to create user, contact an admin');
+    setLoading(false);
+    return;
+  }
+  setNicknameError('');
+
+  if (game.players.some(player => Object.keys(player).includes(uid))) {
+    console.log('User is already in the game');
+    setLoading(false);
+    return;
+  }
+
+  if (game.status !== 'not_started') {
+    setGameCodeError('Game is already started');
+    setLoading(false);
+    return;
+  }
+  setGameCodeError('');
+
+  for (const player of game.players) {
+    if (Object.values(player).includes(nickname)) {
+      setNicknameError('Nickname already taken');
+      setLoading(false);
+      return;
+    }
+  }
+  setNicknameError('');
+
+  try {
+    await addPlayerToGame(typedGameCode, uid, nickname);
+  } catch (err) {
+    setGameCodeError('Failed to add player to game, contact an admin');
+    setLoading(false);
+    return;
+  }
+  setGameCodeError('');
+  setLoading(false);
+}
 
 export { nicknameChangeHandler, joinGameHandler };
