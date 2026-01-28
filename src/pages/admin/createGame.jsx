@@ -38,7 +38,7 @@ function formReducer(state, action) {
 
 export default function CreateGame() {
   const [form, dispatch] = useReducer(formReducer, initialForm);
-  const { game, setGameCode, actions } = useGameContext();
+  const { game, setGameId, actions } = useGameContext();
 
   async function _handleCreateGame() {
     const { code, adminCode, endTime, id } = await createGame();
@@ -46,7 +46,7 @@ export default function CreateGame() {
     dispatch({ type: 'adminCode', value: adminCode });
     dispatch({ type: 'endTime', value: endTime.toISOString().slice(0, -1) });
     dispatch({ type: 'gameCreated', value: false });
-    setGameCode(id);
+    setGameId(id);
   }
 
   function _handleCopyGameCode() {
@@ -101,12 +101,15 @@ export default function CreateGame() {
     }
 
     try {
+      // Setting to loading blocks users from joining the game
+      await actions.updateGame({ status: 'teams_loading' });
       const teams = createTeams(game.players, form.teamSize, form.numTeams);
-      await actions.updateGame({ status: 'teams_created' });
       
       dispatch({ type: 'teams', value: teams });
       dispatch({ type: 'isLoading', value: false });
       await uploadTeamsToGame(game.id, teams);
+      // Once the teams are created, set to teams_created to send players to next screen
+      await actions.updateGame({ status: 'teams_created' });
     } catch (error) {
       alert(error.message);
       dispatch({ type: 'isLoading', value: false });

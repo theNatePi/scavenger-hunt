@@ -8,7 +8,7 @@ function nicknameChangeHandler(value, dispatch) {
   dispatch({ type: 'nickname', value, error: showError ? error : '' });
 }
 
-async function joinGameHandler(form, dispatch) {
+async function joinGameHandler(form, dispatch, setGameId) {
   const { nickname, typedGameCode } = form;
   const setLoading = (v) => dispatch({ type: 'loading', value: v });
   const setNicknameError = (v) => dispatch({ type: 'nicknameError', value: v });
@@ -19,14 +19,14 @@ async function joinGameHandler(form, dispatch) {
   if (error) {
     setNicknameError(error);
     setLoading(false);
-    return;
+    return false;
   }
 
   const game = await getGameByCode(typedGameCode);
   if (!game) {
     setGameCodeError('Game not found');
     setLoading(false);
-    return;
+    return false;
   }
   setGameCodeError('');
 
@@ -34,20 +34,20 @@ async function joinGameHandler(form, dispatch) {
   if (!uid) {
     setNicknameError('Failed to create user, contact an admin');
     setLoading(false);
-    return;
+    return false;
   }
   setNicknameError('');
 
   if (game.players.some(player => Object.keys(player).includes(uid))) {
     console.log('User is already in the game');
     setLoading(false);
-    return;
+    return false;
   }
 
   if (game.status !== 'not_started') {
     setGameCodeError('Game has already started');
     setLoading(false);
-    return;
+    return false;
   }
   setGameCodeError('');
 
@@ -55,7 +55,7 @@ async function joinGameHandler(form, dispatch) {
     if (Object.values(player).includes(nickname)) {
       setNicknameError('Nickname already taken');
       setLoading(false);
-      return;
+      return false;
     }
   }
   setNicknameError('');
@@ -65,10 +65,14 @@ async function joinGameHandler(form, dispatch) {
   } catch (err) {
     setGameCodeError('Failed to add player to game, contact an admin');
     setLoading(false);
-    return;
+    return false;
   }
+
+  await setGameId(game.id);
+
   setGameCodeError('');
   setLoading(false);
+  return true;
 }
 
 

@@ -1,5 +1,6 @@
 import { useReducer, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useGameContext } from '../../contexts/GameContext';
 import { nicknameChangeHandler, joinGameHandler, checkForAuthAndActiveGame } from './landingTools';
 import GlassContainer from '../../components/glassContainer/glassContainer';
 import GlassButton from '../../components/glassButton';
@@ -28,17 +29,15 @@ function formReducer(state, action) {
 
 export default function Landing() {
   const [form, dispatch] = useReducer(formReducer, initialForm);
-
+  const { setGameId, setPlayer } = useGameContext();
   const [showAdminOptions, setShowAdminOptions] = useState(false);
   const navigate = useNavigate();
+
   useEffect(() => {
     async function checkForActiveGame() {
       const activeGame = await checkForAuthAndActiveGame();
       if (activeGame) {
-        console.log('active game', activeGame);
         dispatch({ type: 'wasDisconnected', value: true });
-      } else {
-        console.log('no active game');
       }
     }
     checkForActiveGame();
@@ -51,7 +50,11 @@ export default function Landing() {
 
   async function _handleJoinGame() {
     setShowAdminOptions(false);
-    await joinGameHandler(form, dispatch);
+    const success = await joinGameHandler(form, dispatch, setGameId);
+    setPlayer({ nickname: form.nickname });
+    if (success) {
+      navigate('/lobby');
+    }
   }
 
   function _hadnleAdminOptions() {

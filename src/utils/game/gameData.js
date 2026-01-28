@@ -26,7 +26,7 @@ async function getGameByCode(gameCode) {
   const gamesRef = collection(db, process.env.REACT_APP_FIREBASE_GAMES_COLLECTION);
   const q = query(gamesRef, where('code', '==', gameCode), limit(1));
   const snapshot = await getDocs(q);
-  return snapshot.docs[0]?.data() ?? null;
+  return { ...snapshot.docs[0]?.data() ?? null, id: snapshot.docs[0]?.id };
 }
 
 

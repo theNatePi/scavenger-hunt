@@ -7,10 +7,10 @@ import { createGame } from '../utils/game/gameData';
  * useGameContext() returns the live Firebase-backed game + gameCode/setGameCode.
  */
 export default function Playground() {
-  const { game, loading, error, gameCode, setGameCode } = useGameContext();
+  const { game, loading, error, gameCode, setGameId } = useGameContext();
 
   useEffect(() => {
-    setGameCode('ceBj3L7yaRJJWQweKwrU');
+    setGameId('ceBj3L7yaRJJWQweKwrU');
   }, []);
 
   useEffect(() => {

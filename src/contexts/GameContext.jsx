@@ -5,12 +5,12 @@ const GameContext = createContext(null);
 
 /**
  * Provides game data from Firestore to the subtree. The game code is stored in
- * context once (via initialGameId or setGameCode); the provider subscribes to
+ * context once (via initialGameId or setGameId); the provider subscribes to
  * that document and keeps game/loading/error in sync.
  *
  * @param {object} props
  * @param {React.ReactNode} props.children
- * @param {string | null | undefined} [props.initialGameId] - Initial game document ID. Can be set later via setGameCode from useGameContext().
+ * @param {string | null | undefined} [props.initialGameId] - Initial game document ID. Can be set later via setGameId from useGameContext().
  * @param {{ collection?: string }} [props.options] - Passed to useGame (e.g. { collection: 'games' }).
  */
 export function GameProvider({ children, initialGameId = null, options = {} }) {
@@ -18,13 +18,13 @@ export function GameProvider({ children, initialGameId = null, options = {} }) {
   const [team, setTeam] = useState(null);
   const [player, setPlayer] = useState(null);
 
-  const setGameCode = useCallback((code) => {
+  const setGameId = useCallback((code) => {
     setGameCodeState((prev) => (typeof code === 'function' ? code(prev) : code));
   }, []);
 
   const snapshot = useGame(gameCode, options);
   const actions = useGameMutations(gameCode, options);
-  const value = { ...snapshot, gameCode, setGameCode, team, setTeam, player, setPlayer, actions };
+  const value = { ...snapshot, gameCode, setGameId, team, setTeam, player, setPlayer, actions };
 
   return (
     <GameContext.Provider value={value}>
@@ -42,7 +42,7 @@ export function GameProvider({ children, initialGameId = null, options = {} }) {
  *   loading: boolean,
  *   error: Error | null,
  *   gameCode: string | null,
- *   setGameCode: (code: string | null | ((prev: string | null) => string | null)) => void,
+ *   setGameId: (code: string | null | ((prev: string | null) => string | null)) => void,
  *   team: object | null,
  *   setTeam: (team: object | null) => void,
  *   player: object | null,
