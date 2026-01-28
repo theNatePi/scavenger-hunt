@@ -24,7 +24,7 @@ export default function Lobby() {
           textAlign: 'center',
         }}
       >
-        Joined Players: {game?.players.length}
+        Joined Players: {game?.players?.length ?? 0}
       </p>
       <p
         style={{
@@ -46,7 +46,7 @@ export default function Lobby() {
           gap: '20px' ,
         }}
       >
-        {game?.players.map((player, index) => (
+        {game?.players?.map((player, index) => (
           <GlassContainer 
             key={index}
             style={{
