@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useGameContext } from '../contexts/GameContext';
-import { createGame } from '../utils/game';
+import { createGame } from '../utils/game/gameData';
 
 /**
  * Example: set game code once from URL (?game=xxx) or leave default.

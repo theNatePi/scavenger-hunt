@@ -1,4 +1,3 @@
-
 function _shuffle(array) {
   // Use Fisher-Yates shuffle
   for (let i = array.length - 1; i > 0; i--) {

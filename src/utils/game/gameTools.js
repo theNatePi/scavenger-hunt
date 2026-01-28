@@ -1,5 +1,5 @@
-import { collection, query, where, limit, getDocs, addDoc } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { collection, query, where, limit, getDocs } from 'firebase/firestore';
+import { db } from '../../config/firebase';
 
 
 /**
@@ -17,7 +17,6 @@ async function _isCodeUsed(code, field='code') {
   const hasActive = snapshot.docs.some((d) => d.get('status') !== 'finished');
   return !hasActive;
 }
-
 
 /**
  * Generates a random game code that passes the given uniqueness check.
@@ -54,26 +53,4 @@ async function generateUniqueCode(options = {}, isUnique=_isCodeUsed, field='cod
   throw new Error(`Failed to generate unique game code after ${maxRetries} attempts`);
 }
 
-async function createGame(packId = 'default') {
-  const gameCode = await generateUniqueCode({ field: 'code' });
-  const adminCode = await generateUniqueCode({ field: 'adminCode' });
-
-  const game = {
-    adminCode: adminCode,
-    code: gameCode,
-    packId: packId,
-    status: 'not_started',
-    endTime: new Date(Date.now() + 1000 * 60 * 60 * 24),
-  };
-
-  // post new game to firestore
-  const gamesRef = collection(db, process.env.REACT_APP_FIREBASE_GAMES_COLLECTION);
-  console.log(gamesRef);
-  console.log(game);
-  const docRef = await addDoc(gamesRef, game);
-  return docRef.id;
-}
-
-
-
-export { generateUniqueCode, createGame };
+export { generateUniqueCode };

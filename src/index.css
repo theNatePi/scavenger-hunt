@@ -1,3 +1,17 @@
+:root {
+  --heading-font-family: 'Source Serif Pro', serif;
+  --heading-font-style: italic;
+
+  --primary-font-family: 'Inter', sans-serif;
+
+  --primary-color: white;
+  --inactive-color: #ffffff76;
+  --confirm-color: #51F64C;
+  --confirm-color-transparent: #51F64C14;
+  --negative-color: #860BD2;
+  --negative-color-transparent: #860BD214;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,8 +19,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #2D0D53;
-  background-image: linear-gradient(-45deg, #4A0766, #2D0D53);
+  background-color: #1E2F3A;
+  background-image: url('./assets/background.png');
+  background-position: top left;
   background-attachment: fixed;
   background-size: 100%;
   background-repeat: no-repeat;

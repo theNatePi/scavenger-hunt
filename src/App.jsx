@@ -2,13 +2,14 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { GameProvider } from './contexts/GameContext';
 import Playground from './pages/playground';
+import Landing from './pages/landing/landing';
 
 function App() {
   return (
     <Router>
       <GameProvider>
         <Routes>
-          <Route path="/" element={<Playground />} />
+          <Route path="/" element={<Landing />} />
           {/* <Route path="/joinLobby" element={<></>} />
           <Route path="/joinLobby/teamReveal" element={<></>} />
           <Route path="/game" element={<></>} />

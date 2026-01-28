@@ -1,0 +1,19 @@
+.glass-container {
+  border-radius: 30px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  background-blend-mode: overlay;
+  box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 20px;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.glass-container * {
+  margin: 0;
+  padding: 0;
+}
