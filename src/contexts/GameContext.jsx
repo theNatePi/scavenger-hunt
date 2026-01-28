@@ -3,6 +3,8 @@ import { useGame, useGameMutations } from '../hooks/useGame';
 
 const GameContext = createContext(null);
 
+const ACTIVE_GAME_ID_STORAGE_KEY = 'scavenger-hunt:activeGameId';
+
 /**
  * Provides game data from Firestore to the subtree. The game code is stored in
  * context once (via initialGameId or setGameId); the provider subscribes to
@@ -14,12 +16,31 @@ const GameContext = createContext(null);
  * @param {{ collection?: string }} [props.options] - Passed to useGame (e.g. { collection: 'games' }).
  */
 export function GameProvider({ children, initialGameId = null, options = {} }) {
-  const [gameCode, setGameCodeState] = useState(initialGameId ?? null);
+  const [gameCode, setGameCodeState] = useState(() => {
+    if (initialGameId != null && initialGameId !== '') return initialGameId;
+    try {
+      return window?.localStorage?.getItem(ACTIVE_GAME_ID_STORAGE_KEY) ?? null;
+    } catch {
+      return null;
+    }
+  });
   const [team, setTeam] = useState(null);
   const [player, setPlayer] = useState(null);
 
   const setGameId = useCallback((code) => {
-    setGameCodeState((prev) => (typeof code === 'function' ? code(prev) : code));
+    setGameCodeState((prev) => {
+      const next = typeof code === 'function' ? code(prev) : code;
+      try {
+        if (next == null || next === '') {
+          window?.localStorage?.removeItem(ACTIVE_GAME_ID_STORAGE_KEY);
+        } else {
+          window?.localStorage?.setItem(ACTIVE_GAME_ID_STORAGE_KEY, String(next));
+        }
+      } catch {
+        // ignore storage errors (private mode, blocked, etc.)
+      }
+      return next;
+    });
   }, []);
 
   const snapshot = useGame(gameCode, options);
