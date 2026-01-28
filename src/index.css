@@ -23,7 +23,6 @@ body {
   background-image: url('./assets/background.png');
   background-position: top left;
   background-attachment: fixed;
-  background-size: 100%;
   background-repeat: no-repeat;
   background-size: cover;
   color: white;

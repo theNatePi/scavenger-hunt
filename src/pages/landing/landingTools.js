@@ -1,7 +1,7 @@
 import { validateNickname } from '../../utils/textProcessing';
 import { getGameByCode } from '../../utils/game/gameData';
-import { fetchOrCreateUser } from '../../utils/auth';
-import { addPlayerToGame } from '../../utils/game/gameData';
+import { fetchOrCreateUser, isLoggedIn } from '../../utils/auth';
+import { addPlayerToGame, activeGameForUser } from '../../utils/game/gameData';
 
 function nicknameChangeHandler(value, dispatch) {
   const { showError, error } = validateNickname(value);
@@ -45,7 +45,7 @@ async function joinGameHandler(form, dispatch) {
   }
 
   if (game.status !== 'not_started') {
-    setGameCodeError('Game is already started');
+    setGameCodeError('Game has already started');
     setLoading(false);
     return;
   }
@@ -71,4 +71,18 @@ async function joinGameHandler(form, dispatch) {
   setLoading(false);
 }
 
-export { nicknameChangeHandler, joinGameHandler };
+
+async function checkForAuthAndActiveGame() {
+  const uid = await isLoggedIn();
+  if (!uid) {
+    return false;
+  }
+
+  const game = await activeGameForUser(uid);
+  if (game) {
+    return true;
+  }
+  return false;
+}
+
+export { nicknameChangeHandler, joinGameHandler, checkForAuthAndActiveGame };

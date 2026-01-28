@@ -40,4 +40,18 @@ async function addPlayerToGame(gameCode, playerUID, nickname) {
   await updateDoc(snapshot.docs[0].ref, game);
 }
 
-export { createGame, getGameByCode, addPlayerToGame };
+
+async function activeGameForUser(userUID) {
+  const gamesRef = collection(db, process.env.REACT_APP_FIREBASE_GAMES_COLLECTION);
+  const q = query(gamesRef, where('status', '!=', 'finished'));
+  const snapshot = await getDocs(q);
+  for (const doc of snapshot.docs) {
+    const game = doc.data();
+    if (game.players.some(player => Object.keys(player).includes(userUID))) {
+      return game;
+    }
+  }
+  return null;
+}
+
+export { createGame, getGameByCode, addPlayerToGame, activeGameForUser };

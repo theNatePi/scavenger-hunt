@@ -29,3 +29,13 @@ export async function fetchOrCreateUser() {
     });
   });
 }
+
+
+export async function isLoggedIn() {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      unsubscribe();
+      resolve(user !== null ? user.uid : null);
+    });
+  });
+}

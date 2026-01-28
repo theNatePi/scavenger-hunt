@@ -1,5 +1,5 @@
-import { useReducer } from 'react';
-import { nicknameChangeHandler, joinGameHandler } from './landingTools';
+import { useReducer, useState, useEffect } from 'react';
+import { nicknameChangeHandler, joinGameHandler, checkForAuthAndActiveGame } from './landingTools';
 import GlassContainer from '../../components/glassContainer/glassContainer';
 import GlassButton from '../../components/glassButton';
 import GlassInput from '../../components/glassInput';
@@ -10,6 +10,7 @@ const initialForm = {
   typedGameCode: '',
   gameCodeError: null,
   isLoading: false,
+  wasDisconnected: false,
 };
 
 function formReducer(state, action) {
@@ -19,6 +20,7 @@ function formReducer(state, action) {
     case 'gameCode': return { ...state, typedGameCode: action.value };
     case 'gameCodeError': return { ...state, gameCodeError: action.value };
     case 'loading': return { ...state, isLoading: action.value };
+    case 'wasDisconnected': return { ...state, wasDisconnected: action.value };
     default: return state;
   }
 }
@@ -26,12 +28,41 @@ function formReducer(state, action) {
 export default function Landing() {
   const [form, dispatch] = useReducer(formReducer, initialForm);
 
+  const [showAdminOptions, setShowAdminOptions] = useState(false);
+
+  useEffect(() => {
+    async function checkForActiveGame() {
+      const activeGame = await checkForAuthAndActiveGame();
+      if (activeGame) {
+        console.log('active game', activeGame);
+        dispatch({ type: 'wasDisconnected', value: true });
+      } else {
+        console.log('no active game');
+      }
+    }
+    checkForActiveGame();
+  }, []);
+
   function _handleNicknameChange(e) {
+    setShowAdminOptions(false);
     nicknameChangeHandler(e.target.value, dispatch);
   }
 
   async function _handleJoinGame() {
+    setShowAdminOptions(false);
     await joinGameHandler(form, dispatch);
+  }
+
+  function _hadnleAdminOptions() {
+    setShowAdminOptions(true);
+  }
+
+  function _handleCreateGame() {
+    console.log('create game');
+  }
+
+  function _handleManageGame() {
+    alert('Not Yet Implemented');
   }
 
   return (
@@ -58,6 +89,20 @@ export default function Landing() {
           You will be tasked with finding and photographing items nearby. Remember to say safe, and have fun!
         </p>
       </GlassContainer>
+      {
+        form.wasDisconnected && (
+          <GlassContainer>
+            <p
+              style={{
+                fontSize: '18px',
+              }}
+            >
+              <b>It looks like you were disconnected.</b> <br/>
+              Input the <u>same</u> game code and <u>any</u> nickname to rejoin the game.
+            </p>
+          </GlassContainer>
+        )
+      }
       <GlassInput placeholder="Nickname" value={form.nickname} onChange={_handleNicknameChange} />
       {form.nicknameError && 
         <p 
@@ -94,18 +139,30 @@ export default function Landing() {
       >
         Join Game
       </GlassButton>
-      <GlassButton 
-        style={{ 
-          backgroundColor: 'var(--negative-color-transparent)' }}
-      >
-        Manage Game
-      </GlassButton>
-
-
-      <div style={{ display: 'flex', gap: '0px' }}>
-        <GlassButton style={{ width: '100%', marginRight: '10px' }}>one</GlassButton>
-        <GlassButton style={{ width: '100%', marginLeft: '10px' }}>two</GlassButton>
-      </div>
+      {showAdminOptions ? (
+        <GlassContainer
+          style={{
+            display: 'flex',
+            backgroundColor: 'var(--negative-color-transparent)',
+            flexDirection: 'row',
+            gap: '0px',
+            // margin: '0',
+            padding: '0',
+          }}
+        >
+          <GlassButton style={{ width: '100%', marginRight: '10px' }} onClick={_handleCreateGame}>Create Game</GlassButton>
+          <GlassButton style={{ width: '100%', marginLeft: '10px' }} onClick={_handleManageGame}>Manage Game</GlassButton>
+        </GlassContainer>
+      ): 
+        (<GlassButton 
+          onClick={_hadnleAdminOptions}
+          style={{ 
+            backgroundColor: 'var(--negative-color-transparent)' }}
+        >
+            Admin Options
+          </GlassButton>
+        )
+      } 
     </div>
   );
 }
