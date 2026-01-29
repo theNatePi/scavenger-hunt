@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import { useGameContext } from '../../contexts/GameContext';
 import { createGame } from '../../utils/game/gameData';
 import { ReactComponent as CopyIcon } from '../../assets/copyIcon.svg';
@@ -39,6 +39,12 @@ function formReducer(state, action) {
 export default function CreateGame() {
   const [form, dispatch] = useReducer(formReducer, initialForm);
   const { game, setGameId, actions } = useGameContext();
+  const teamsUnsubRef = useRef(null);
+
+  // Cleanup the teams listener if we leave this page.
+  useEffect(() => {
+    return () => teamsUnsubRef.current?.();
+  }, []);
 
   async function _handleCreateGame() {
     const { code, adminCode, endTime, id } = await createGame();
@@ -105,9 +111,17 @@ export default function CreateGame() {
       await actions.updateGame({ status: 'teams_loading' });
       const teams = createTeams(game.players, form.teamSize, form.numTeams);
       
-      dispatch({ type: 'teams', value: teams });
       dispatch({ type: 'isLoading', value: false });
-      await uploadTeamsToGame(game.id, teams);
+      // Ensure we don't stack multiple listeners if this is ever triggered again.
+      teamsUnsubRef.current?.();
+
+      const { teams: uploadedTeams, unsubscribe } = await uploadTeamsToGame(game.id, teams, {
+        onTeams: (nextTeams) => dispatch({ type: 'teams', value: nextTeams }),
+        onError: (err) => console.error('teams snapshot error', err),
+      });
+
+      teamsUnsubRef.current = unsubscribe;
+      dispatch({ type: 'teams', value: uploadedTeams });
       // Once the teams are created, set to teams_created to send players to next screen
       await actions.updateGame({ status: 'teams_created' });
     } catch (error) {
@@ -204,7 +218,7 @@ export default function CreateGame() {
                 <p style={{ fontSize: '15px' }}>Teams:</p>
               <div>
                 {form.teams.map((team, index) => (
-                  <p key={index}>Team {index + 1}: {team.length} players</p>
+                  <p key={index}>Team {index + 1}: {team.playerNicknames.length} players - {team.teamReady ? 'Ready' : 'Not Ready'}</p>
                 ))}
               </div>
             </>
