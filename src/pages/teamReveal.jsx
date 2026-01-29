@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useGameContext } from '../contexts/GameContext';
 import ShuffleReveal from '../components/ShuffleReveal';
 import GlassButton from '../components/glassButton';
@@ -6,6 +7,7 @@ import GlassButton from '../components/glassButton';
 export default function TeamReveal() {
   const { game, player, team, setTeam, actions } = useGameContext();
   const [teamReady, setTeamReady] = useState(false);
+  const navigate = useNavigate();
 
   const revealTime = 1;
   const revealOffset = 0.5;
@@ -25,8 +27,10 @@ export default function TeamReveal() {
   };
 
   useEffect(() => {
-    setTeamReady(team?.teamReady);
-  }, [team]);
+    if (game?.status === 'game_started') {
+      navigate('/game');
+    }
+  }, [game?.status]);
 
   useEffect(() => {
     const nickname = player?.nickname;

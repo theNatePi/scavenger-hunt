@@ -6,6 +6,7 @@ import Landing from './pages/landing/landing';
 import CreateGame from './pages/admin/createGame';
 import Lobby from './pages/Lobby';
 import TeamReveal from './pages/teamReveal';
+import Game from './pages/Game/game';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/admin/createGame" element={<CreateGame />} />
           <Route path="/lobby" element={<Lobby />} />
           <Route path="/lobby/teamReveal" element={<TeamReveal />} />
+          <Route path="/game" element={<Game />} />
           {/* <Route path="/joinLobby/teamReveal" element={<></>} />
           <Route path="/game" element={<></>} />
           <Route path="/game/item/:id" element={<></>} />

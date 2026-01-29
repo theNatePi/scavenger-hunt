@@ -1,4 +1,4 @@
-import { collection, addDoc, getDocs, limit, query, where, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, getDocs, limit, query, where, updateDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { generateUniqueCode } from './gameTools';
 

@@ -132,7 +132,8 @@ export default function CreateGame() {
   }
 
   function _handleStartGame() {
-    console.log('start game');
+    actions.updateGame({ endTime: new Date(form.endTime) });
+    actions.updateGame({ status: 'game_started' });
   }
 
   return (
