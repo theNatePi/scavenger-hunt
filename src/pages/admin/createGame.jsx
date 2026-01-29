@@ -117,7 +117,7 @@ export default function CreateGame() {
 
       const { teams: uploadedTeams, unsubscribe } = await uploadTeamsToGame(game.id, teams, {
         onTeams: (nextTeams) => dispatch({ type: 'teams', value: nextTeams }),
-        onError: (err) => console.error('teams snapshot error', err),
+        onError: (err) => alert(err.message),
       });
 
       teamsUnsubRef.current = unsubscribe;
