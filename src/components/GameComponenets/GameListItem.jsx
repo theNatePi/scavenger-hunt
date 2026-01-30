@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import GlassContainer from '../glassContainer/glassContainer';
 import GlassButton from '../glassButton';
+import { useNavigate } from 'react-router-dom';
 
 function GameItem({ itemId, itemImgUri, points, bonusPoints, teamsFound, isFound }) {
   const [showImage, setShowImage] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -97,7 +99,8 @@ function GameItem({ itemId, itemImgUri, points, bonusPoints, teamsFound, isFound
           />
         </div>
       )}
-      <GlassContainer    
+      <GlassContainer
+        onClick={() => navigate(`/game/item/${itemId}`)}
         style={{
           display: 'flex',
           flexDirection: 'row',
@@ -110,7 +113,10 @@ function GameItem({ itemId, itemImgUri, points, bonusPoints, teamsFound, isFound
           <img 
             src={itemImgUri} 
             alt={itemId} 
-            onClick={() => setShowImage(true)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowImage(true);
+            }}
             style={{
               width: '150px',
               height: '100px',

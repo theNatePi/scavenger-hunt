@@ -1,6 +1,6 @@
 import GameStats from '../../components/GameComponenets/GameStats';
 import GameTimer from '../../components/GameComponenets/GameTimer';
-import GameItem from '../../components/GameComponenets/GameItem';
+import GameItem from '../../components/GameComponenets/GameListItem';
 
 export default function Game() {
   const players = ['Player A', 'Player B', 'Player C', 'Player D'];
