@@ -10,6 +10,9 @@
   --confirm-color-transparent: #51F64C14;
   --negative-color: #860BD2;
   --negative-color-transparent: #860BD214;
+
+  --found-color: #45bc40c3;
+  --not-found-color: #d20b2fb4;
 }
 
 body {
