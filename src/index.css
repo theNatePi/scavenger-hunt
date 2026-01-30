@@ -12,7 +12,9 @@
   --negative-color-transparent: #860BD214;
 
   --found-color: #45bc40c3;
+  --found-gradient: linear-gradient(to bottom right, #45bc40c3, #45bc4065);
   --not-found-color: #d20b2fb4;
+  --not-found-gradient: linear-gradient(to bottom right, #d20b2fb4, #d20b2f65);
 }
 
 body {

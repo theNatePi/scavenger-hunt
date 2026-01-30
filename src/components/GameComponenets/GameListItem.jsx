@@ -56,7 +56,7 @@ function GameItem({ itemId, itemImgUri, points, bonusPoints, teamsFound, isFound
             <p style={{ fontSize: '15px', color: 'var(--primary-color)' }}>Teams Found: {teamsFound}</p>
             <p style={{ fontSize: '15px', color: 'var(--primary-color)' }}>{isFound ? 'Found' : 'Not Found'}</p>
             {teamsFound === 0 && (
-              <p style={{ fontSize: '12px', fontStyle: 'italic', color: 'var(--primary-color)' }}>find it first, get +{bonusPoints} points!</p>
+              <p style={{ fontSize: '12px', fontStyle: 'italic', color: 'var(--primary-color)', textAlign: 'right' }}>find it first, get +{bonusPoints}</p>
             )}
           </div>
           <div 

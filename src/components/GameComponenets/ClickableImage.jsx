@@ -61,7 +61,7 @@ export default function ClickableImage({ imgUri, alt, style }) {
                   color: 'var(--primary-color)',
                 }}
               >
-                Find this item in the game area and upload a photo!
+                Find this item in the game area
               </p>
             </GlassContainer>
             <GlassButton

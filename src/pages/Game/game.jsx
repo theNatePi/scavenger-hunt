@@ -1,5 +1,5 @@
 import GameStats from '../../components/GameComponenets/GameStats';
-import GameTimer from '../../components/GameComponenets/GameTimer';
+import GamePoints from '../../components/GameComponenets/GamePoints';
 import GameItem from '../../components/GameComponenets/GameListItem';
 
 export default function Game() {
@@ -14,7 +14,7 @@ export default function Game() {
         }}
       >
         <GameStats players={players} endTime={endTime} />
-        <GameTimer estimatedPoints={20} />
+        <GamePoints estimatedPoints={20} />
       </div>
       <div
         style={{
