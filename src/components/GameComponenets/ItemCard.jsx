@@ -49,16 +49,16 @@ export default function ItemCard({ itemId, itemImgUri, points, bonusPoints, team
         style={{
           fontSize: '20px',
           color: 'var(--primary-color)',
-          marginBottom: '-10px',
         }}
       >
-        {teamsFound} teams found
+        {teamsFound} team{teamsFound === 1 ? '' : 's'} found
       </p>
       {teamsFound === 0 && (
         <p
           style={{
             fontSize: '18px',
             color: 'var(--primary-color)',
+            marginTop: '-10px',
             marginBottom: '0px',
           }}
         >

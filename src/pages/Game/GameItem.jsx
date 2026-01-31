@@ -1,5 +1,10 @@
 import { useParams, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
+import { getImageById } from '../../utils/imageStorage/firebaseStorage';
+import { getItemById } from '../../utils/items/ItemData';
 import { useGameContext } from '../../contexts/GameContext';
+import { enrichItems } from './gameTools';
 import GlassContainer from '../../components/glassContainer/glassContainer';
 import GlassButton from '../../components/glassButton';
 import ItemCard from '../../components/GameComponenets/ItemCard';
@@ -8,17 +13,30 @@ import UploadImage from '../../components/GameComponenets/UploadImage';
 
 export default function GameItem() {
   const { id } = useParams();
-  const { team, teamData } = useGameContext();
   const navigate = useNavigate();
+  const { game, team, teamData } = useGameContext();
 
-  const item = {
-    id: id,
-    imgUri: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.f3AeOJngXd-l82lHJWLFgAHaED%3Fpid%3DApi&f=1&ipt=cf68f8c6963cdcf91102b96fb2ee44080c392b558818fe27f353de59d604ce0b',
-    points: 100,
-    bonusPoints: 100,
-    teamsFound: 0,
-    isFound: false,
-  };
+  const packId = game?.packId;
+
+  const { data: itemData } = useQuery({
+    queryKey: ['item', id, packId],
+    queryFn: async () => {
+      const item = await getItemById(packId, id);
+      const image = await getImageById(packId, item.imageFile);
+      return { ...item, image };
+    },
+    enabled: !!packId && !!id,
+  });
+
+  const item = useMemo(() => {
+    const item = {
+      id: id,
+      imgUrl: itemData?.image,
+      points: itemData?.points,
+      bonusPoints: itemData?.bonusPoints,
+    }
+    return enrichItems([item], game, team)[0];
+  }, [id, itemData, game, team]);
 
   return (
     <div>
@@ -68,11 +86,11 @@ export default function GameItem() {
       </GlassContainer>
       <ItemCard 
         itemId={item.id} 
-        itemImgUri={item.imgUri} 
+        itemImgUri={item.imgUrl} 
         points={item.points} 
         bonusPoints={item.bonusPoints} 
-        teamsFound={item.teamsFound} 
-        isFound={item.isFound}
+        teamsFound={item.numTeamsFound} 
+        isFound={item.foundByPlayerTeam}
       />
       <UploadImage />
     </div>

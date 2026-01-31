@@ -14,4 +14,10 @@ async function getPackImages(packId) {
   }));
 }
 
-export { getPackImages };
+async function getImageById(packId, itemFile) {
+  const storageRef = ref(storage, `packs/${packId}/${itemFile}`);
+  const snapshot = await getDownloadURL(storageRef);
+  return snapshot;
+}
+
+export { getPackImages, getImageById };
