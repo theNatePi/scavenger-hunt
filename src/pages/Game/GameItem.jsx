@@ -25,6 +25,7 @@ export default function GameItem() {
       const image = await getImageById(packId, item.imageFile);
       return { ...item, image };
     },
+    staleTime: 5 * 60 * 1000, // 5 minutes
     enabled: !!packId && !!id,
   });
 
