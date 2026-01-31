@@ -1,6 +1,12 @@
+import { ReactComponent as QuestionMarkIcon } from '../../assets/questionMarkIcon.svg';
 import GlassContainer from '../glassContainer/glassContainer';
 
 export default function GamePoints({ estimatedPoints, style }) {
+  const pointsDisclaimer = `Estimated points are based on the items you claim \
+  to have found + the bonus points you might have earned. An admin will verify \
+  all images before rewarding you points. Two teams may find the same item at \
+  similar times, leading to both getting "bonus points" in the estimated points.`;
+
   return (
     <GlassContainer
       style={{
@@ -22,15 +28,35 @@ export default function GamePoints({ estimatedPoints, style }) {
           width: '95%',
         }}
       >
-        <p
+        <div
           style={{
-            fontSize: '20px',
-            fontWeight: 'bold',
-            color: 'var(--primary-color)',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '10px',
           }}
         >
-          Estimated Points:
-        </p>
+          <QuestionMarkIcon 
+            onClick={() => {
+              alert(pointsDisclaimer);
+            }}
+            style={{
+              width: '20px',
+              height: '20px',
+              color: 'var(--primary-color)',
+            }}
+          />
+          <p
+            style={{
+              fontSize: '20px',
+              fontWeight: 'bold',
+              color: 'var(--primary-color)',
+            }}
+          >
+            Estimated Points:
+          </p>
+        </div>
         <p
           style={{
             fontSize: '20px',
