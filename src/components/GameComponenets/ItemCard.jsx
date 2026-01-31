@@ -53,7 +53,7 @@ export default function ItemCard({ itemId, itemImgUri, points, bonusPoints, team
       >
         {teamsFound} team{teamsFound === 1 ? '' : 's'} found
       </p>
-      {teamsFound === 0 && (
+      {(teamsFound === 0 && bonusPoints > 0) && (
         <p
           style={{
             fontSize: '18px',
