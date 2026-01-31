@@ -8,10 +8,9 @@ function _numTeamsFoundItem(itemId, game) {
 };
 
 function _playerTeamFoundItem(itemId, game, team) {
-  // return game?.teams?.find(
-  //   (team) => team.foundItems.some((foundItem) => foundItem.itemId === itemId)
-  // )?.id ?? false;
-  return false;
+  const playerTeam = game?.teams?.find((gameTeam) => gameTeam.id === team?.id);
+  const playerTeamFoundItem = playerTeam?.foundItems?.find((foundItem) => foundItem.id === itemId);
+  return playerTeamFoundItem ? true : false;
 };
 
 async function fetchItems(packId) {
