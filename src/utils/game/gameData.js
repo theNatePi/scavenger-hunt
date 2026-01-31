@@ -2,7 +2,7 @@ import { collection, addDoc, doc, getDocs, limit, query, where, updateDoc } from
 import { db } from '../../config/firebase';
 import { generateUniqueCode } from './gameTools';
 
-async function createGame(packId = 'default') {
+async function createGame(packId = 'uci-testing') {
   const gameCode = await generateUniqueCode({ field: 'code' });
   const adminCode = await generateUniqueCode({ field: 'adminCode' });
 

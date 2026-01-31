@@ -9,11 +9,9 @@ import GameItem from '../../components/GameComponenets/GameListItem';
 export default function Game() {
   const { game, team, teamData } = useGameContext();
 
-  const packId = 'uci-testing';
-
   const { data: items } = useQuery({
-    queryKey: ['items', packId],
-    queryFn: async () => await fetchItems(packId),
+    queryKey: ['items', game?.packId],
+    queryFn: async () => await fetchItems(game?.packId),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
