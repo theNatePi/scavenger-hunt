@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import GlassButton from '../glassButton';
-import { uploadFoundImage } from '../../utils/imageStorage/imageUploadData';
 import { useGameContext } from '../../contexts/GameContext';
 
 export default function UploadImage({ itemId }) {
@@ -34,7 +33,7 @@ export default function UploadImage({ itemId }) {
       if (file) {
         console.log('Selected image file:', file);
         try {
-          await uploadFoundImage(file, itemId, team?.id);
+          // await uploadFoundImage(file, itemId, team?.id);
           // Reload the page after the image upload
           // document.body.removeChild(cameraInput);
           document.body.removeChild(galleryInput);

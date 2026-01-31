@@ -26,6 +26,7 @@ export function GameProvider({ children, initialGameId = null, options = {} }) {
       return null;
     }
   });
+
   const [team, setTeamState] = useState(() => {
     try {
       const raw = window?.localStorage?.getItem(ACTIVE_TEAM_STORAGE_KEY);
@@ -35,6 +36,7 @@ export function GameProvider({ children, initialGameId = null, options = {} }) {
       return null;
     }
   });
+
   const [player, setPlayerState] = useState(() => {
     try {
       const raw = window?.localStorage?.getItem(ACTIVE_PLAYER_STORAGE_KEY);
@@ -94,8 +96,14 @@ export function GameProvider({ children, initialGameId = null, options = {} }) {
   }, []);
 
   const snapshot = useGame(gameCode, options);
+  const { game } = snapshot;
+
+  const teamData = useCallback((teamId) => {
+    return game?.teams?.find((team) => team.id === teamId);
+  }, [game?.teams]);
+
   const actions = useGameMutations(gameCode, options);
-  const value = { ...snapshot, gameCode, setGameId, team, setTeam, player, setPlayer, actions };
+  const value = { ...snapshot, gameCode, setGameId, team, teamData, setTeam, player, setPlayer, actions };
 
   return (
     <GameContext.Provider value={value}>

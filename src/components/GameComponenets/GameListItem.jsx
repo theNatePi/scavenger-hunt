@@ -1,11 +1,8 @@
-import { useState } from 'react';
-import GlassContainer from '../glassContainer/glassContainer';
-import GlassButton from '../glassButton';
 import { useNavigate } from 'react-router-dom';
+import GlassContainer from '../glassContainer/glassContainer';
 import ClickableImage from './ClickableImage';
 
-function GameItem({ itemId, itemImgUri, points, bonusPoints, teamsFound, isFound }) {
-  const [showImage, setShowImage] = useState(false);
+function GameItem({ itemId, itemImgUrl, points, bonusPoints, numTeamsFound, isFound }) {
   const navigate = useNavigate();
 
   return (
@@ -22,7 +19,7 @@ function GameItem({ itemId, itemImgUri, points, bonusPoints, teamsFound, isFound
       >
         <div>
           <ClickableImage 
-            imgUri={itemImgUri} 
+            imgUri={itemImgUrl} 
             alt={itemId} 
             style={{ 
               width: '150px',
@@ -53,9 +50,9 @@ function GameItem({ itemId, itemImgUri, points, bonusPoints, teamsFound, isFound
             }}
           >
             <p style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--primary-color)' }}>Points: {points}</p>
-            <p style={{ fontSize: '15px', color: 'var(--primary-color)' }}>Teams Found: {teamsFound}</p>
+            <p style={{ fontSize: '15px', color: 'var(--primary-color)' }}>Teams Found: {numTeamsFound}</p>
             <p style={{ fontSize: '15px', color: 'var(--primary-color)' }}>{isFound ? 'Found' : 'Not Found'}</p>
-            {teamsFound === 0 && (
+            {(numTeamsFound === 0 && bonusPoints > 0) && (
               <p style={{ fontSize: '12px', fontStyle: 'italic', color: 'var(--primary-color)', textAlign: 'right' }}>find it first, get +{bonusPoints}</p>
             )}
           </div>

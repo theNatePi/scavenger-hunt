@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
+import { useGameContext } from '../../contexts/GameContext';
 import GlassContainer from '../../components/glassContainer/glassContainer';
 import GlassButton from '../../components/glassButton';
 import ItemCard from '../../components/GameComponenets/ItemCard';
@@ -7,12 +8,11 @@ import UploadImage from '../../components/GameComponenets/UploadImage';
 
 export default function GameItem() {
   const { id } = useParams();
+  const { team, teamData } = useGameContext();
   const navigate = useNavigate();
 
-  const estimatedPoints = 20;
-
   const item = {
-    id: 1,
+    id: id,
     imgUri: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.f3AeOJngXd-l82lHJWLFgAHaED%3Fpid%3DApi&f=1&ipt=cf68f8c6963cdcf91102b96fb2ee44080c392b558818fe27f353de59d604ce0b',
     points: 100,
     bonusPoints: 100,
@@ -53,7 +53,7 @@ export default function GameItem() {
             Back
           </p>
         </GlassButton>
-        <GamePoints estimatedPoints={estimatedPoints} style={{ marginLeft: '-20px', width: '100%', marginBottom: '0'}} />
+        <GamePoints estimatedPoints={teamData(team?.id)?.points} style={{ marginLeft: '-20px', width: '100%', marginBottom: '0'}} />
       </div>
       <GlassContainer>
         <p><b>Find the item or location below!</b></p>

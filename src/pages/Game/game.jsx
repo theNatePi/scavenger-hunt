@@ -1,8 +1,27 @@
-import GameStats from '../../components/GameComponenets/GameStats';
+import { useEffect, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useGameContext } from '../../contexts/GameContext';
+import { fetchItems, enrichItems } from '../Game/gameTools';
 import GamePoints from '../../components/GameComponenets/GamePoints';
+import GameStats from '../../components/GameComponenets/GameStats';
 import GameItem from '../../components/GameComponenets/GameListItem';
 
 export default function Game() {
+  const { game, team, teamData } = useGameContext();
+
+  const packId = 'uci-testing';
+
+  const { data: items } = useQuery({
+    queryKey: ['items', packId],
+    queryFn: async () => await fetchItems(packId),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  const enrichedItems = useMemo(() => {
+    const enrichedItems = enrichItems(items, game, team);
+    return enrichedItems;
+  }, [items, game?.teams, team]);
+
   const players = ['Player A', 'Player B', 'Player C', 'Player D'];
   const endTime = new Date(Date.now() + 1000 * 60 * 60 * 24);
 
@@ -14,18 +33,16 @@ export default function Game() {
         }}
       >
         <GameStats players={players} endTime={endTime} />
-        <GamePoints estimatedPoints={20} />
+        <GamePoints estimatedPoints={teamData(team?.id)?.points} />
       </div>
       <div
         style={{
           width: '100%',
         }}
       >
-        <GameItem itemId="1" itemImgUri="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.f3AeOJngXd-l82lHJWLFgAHaED%3Fpid%3DApi&f=1&ipt=cf68f8c6963cdcf91102b96fb2ee44080c392b558818fe27f353de59d604ce0b" points={100} bonusPoints={100} teamsFound={0} isFound={false} />
-        <GameItem itemId="2" itemImgUri="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.f3AeOJngXd-l82lHJWLFgAHaED%3Fpid%3DApi&f=1&ipt=cf68f8c6963cdcf91102b96fb2ee44080c392b558818fe27f353de59d604ce0b" points={100} bonusPoints={100} teamsFound={1} isFound={true} />
-        <GameItem itemId="3" itemImgUri="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.f3AeOJngXd-l82lHJWLFgAHaED%3Fpid%3DApi&f=1&ipt=cf68f8c6963cdcf91102b96fb2ee44080c392b558818fe27f353de59d604ce0b" points={100} bonusPoints={100} teamsFound={1} isFound={false} />
-        <GameItem itemId="4" itemImgUri="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.f3AeOJngXd-l82lHJWLFgAHaED%3Fpid%3DApi&f=1&ipt=cf68f8c6963cdcf91102b96fb2ee44080c392b558818fe27f353de59d604ce0b" points={100} bonusPoints={100} teamsFound={1} isFound={false} />
-        <GameItem itemId="5" itemImgUri="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.f3AeOJngXd-l82lHJWLFgAHaED%3Fpid%3DApi&f=1&ipt=cf68f8c6963cdcf91102b96fb2ee44080c392b558818fe27f353de59d604ce0b" points={100} bonusPoints={100} teamsFound={1} isFound={false} />
+        {enrichedItems?.map((item) => (
+          <GameItem key={item.id} itemId={item.id} itemImgUrl={item.imageUrl} points={item.points} bonusPoints={item.bonusPoints} numTeamsFound={item.numTeamsFound} isFound={item.foundByPlayerTeam} />
+        ))}
       </div>
     </div>
 
