@@ -93,7 +93,7 @@ export default function GameItem() {
         teamsFound={item.numTeamsFound} 
         isFound={item.foundByPlayerTeam}
       />
-      <UploadImage />
+      <UploadImage itemId={item.id} itemPoints={item.points} itemBonusPoints={item.bonusPoints} />
     </div>
   );
 }

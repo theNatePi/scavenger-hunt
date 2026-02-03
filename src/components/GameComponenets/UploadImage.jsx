@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import GlassButton from '../glassButton';
 import { useGameContext } from '../../contexts/GameContext';
+import { handleNewFoundItem } from '../../utils/items/ItemData';
 
-export default function UploadImage({ itemId }) {
+export default function UploadImage({ itemId, itemPoints, itemBonusPoints }) {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [imgErr, setImgErr] = useState(null);
-  const { team } = useGameContext();
+  const { team, game } = useGameContext();
 
   const handleImageUpload = async () => {
     // Create two input elements for camera and gallery
@@ -31,9 +32,9 @@ export default function UploadImage({ itemId }) {
       setUploadingImage(true);
       const file = e.target.files[0];
       if (file) {
-        console.log('Selected image file:', file);
         try {
-          // await uploadFoundImage(file, itemId, team?.id);
+          await handleNewFoundItem(file, itemId, team.id, game.id, itemPoints, itemBonusPoints);
+          console.log('Image uploaded successfully');
           // Reload the page after the image upload
           // document.body.removeChild(cameraInput);
           document.body.removeChild(galleryInput);

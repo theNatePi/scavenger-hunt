@@ -1,4 +1,4 @@
-import { collection, doc, onSnapshot, writeBatch } from 'firebase/firestore';
+import { collection, doc, onSnapshot, writeBatch, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 
 function subscribeTeamsForGame(gameId, onTeams, onError) {
@@ -68,4 +68,26 @@ async function uploadTeamsToGame(gameId, teams, { onTeams, onError } = {}) {
   });
 }
 
-export { uploadTeamsToGame, subscribeTeamsForGame };
+
+async function addPointsToTeam(gameId, teamId, points) {
+  const gamesCol = process.env.REACT_APP_FIREBASE_GAMES_COLLECTION || 'games';
+  const teamsCol = process.env.REACT_APP_FIREBASE_TEAMS_COLLECTION || 'teams';
+  const teamsRef = doc(db, gamesCol, gameId, teamsCol, teamId);
+
+  const teamData = await getDoc(teamsRef);
+  const currentPoints = teamData.data().points;
+  const newPoints = currentPoints + points;
+  await updateDoc(teamsRef, { points: newPoints });
+}
+
+
+async function isItemFoundByTeam(gameId, teamId, itemId) {
+  const gamesCol = process.env.REACT_APP_FIREBASE_GAMES_COLLECTION || 'games';
+  const teamsCol = process.env.REACT_APP_FIREBASE_TEAMS_COLLECTION || 'teams';
+  const foundItemsCol = process.env.REACT_APP_FIREBASE_FOUND_ITEMS_COLLECTION || 'foundItems';
+  const itemsRef = doc(db, gamesCol, gameId, teamsCol, teamId, foundItemsCol, itemId);
+  const itemData = await getDoc(itemsRef);
+  return {exists: itemData.exists(), itemDoc: itemData};
+}
+
+export { uploadTeamsToGame, subscribeTeamsForGame, addPointsToTeam, isItemFoundByTeam };
