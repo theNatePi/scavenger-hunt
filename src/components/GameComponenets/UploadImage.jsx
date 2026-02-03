@@ -33,7 +33,7 @@ export default function UploadImage({ itemId, itemPoints, itemBonusPoints }) {
       const file = e.target.files[0];
       if (file) {
         try {
-          await handleNewFoundItem(file, itemId, team.id, game.id, itemPoints, itemBonusPoints);
+          await handleNewFoundItem(file, itemId, team.id, game, itemPoints, itemBonusPoints);
           console.log('Image uploaded successfully');
           // Reload the page after the image upload
           // document.body.removeChild(cameraInput);

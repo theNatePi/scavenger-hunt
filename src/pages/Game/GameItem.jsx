@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { getImageById } from '../../utils/imageStorage/firebaseStorage';
+import { getImageById, getFoundImageById } from '../../utils/imageStorage/firebaseStorage';
 import { getItemById } from '../../utils/items/ItemData';
 import { useGameContext } from '../../contexts/GameContext';
 import { enrichItems } from './gameTools';
@@ -23,7 +23,8 @@ export default function GameItem() {
     queryFn: async () => {
       const item = await getItemById(packId, id);
       const image = await getImageById(packId, item.imageFile);
-      return { ...item, image };
+      const foundImage = await getFoundImageById(team?.id, id, game?.id);
+      return { ...item, image, foundImage };
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
     enabled: !!packId && !!id,
@@ -33,6 +34,7 @@ export default function GameItem() {
     const item = {
       id: id,
       imgUrl: itemData?.image,
+      foundImgUrl: itemData?.foundImage,
       points: itemData?.points,
       bonusPoints: itemData?.bonusPoints,
     }
@@ -92,6 +94,7 @@ export default function GameItem() {
         bonusPoints={item.bonusPoints} 
         teamsFound={item.numTeamsFound} 
         isFound={item.foundByPlayerTeam}
+        foundImgUri={item.foundImgUrl}
       />
       <UploadImage itemId={item.id} itemPoints={item.points} itemBonusPoints={item.bonusPoints} />
     </div>

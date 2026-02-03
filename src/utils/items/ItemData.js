@@ -1,7 +1,7 @@
 import { collection, getDocs, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage } from '../../config/firebase';
+import { db } from '../../config/firebase';
 import { addPointsToTeam, isItemFoundByTeam } from '../teams/teamsData';
+import { uploadFoundImage } from '../imageStorage/firebaseStorage';
 
 async function getItemsByPackId(packId) {
   if (!packId) {
@@ -28,19 +28,6 @@ async function getItemById(packId, itemId) {
 }
 
 
-async function _uploadFoundImage(file) {
-  if (!file) {
-    return null;
-  }
-
-  const foundItemsCol = process.env.REACT_APP_FIREBASE_STORAGE_FOUND_ITEMS_COLLECTION || 'foundItems';
-  const storageRef = ref(storage, foundItemsCol);
-  const uploadTask = await uploadBytes(storageRef, file);
-  const imageUrl = await getDownloadURL(uploadTask.ref);
-  return imageUrl;
-}
-
-
 async function _markItemAsFound(itemId, teamId, gameId, imageUrl, foundAt) {
   if (!itemId || !teamId || !gameId) {
     return null;
@@ -58,12 +45,17 @@ async function _markItemAsFound(itemId, teamId, gameId, imageUrl, foundAt) {
 }
 
 
-async function handleNewFoundItem(file, itemId, teamId, gameId, itemPoints, itemBonusPoints) {
+function _teamAlreadyFoundItem(itemId, game) {
+  return game.teams.some((team) => team.foundItems.some((foundItem) => foundItem.id === itemId));
+}
+
+
+async function handleNewFoundItem(file, itemId, teamId, game, itemPoints, itemBonusPoints) {
   const foundAt = new Date();
-  const imageUrl = await _uploadFoundImage(file);
+  const imageUrl = await uploadFoundImage(file);
 
   // Check if the item is already found by this team
-  const {exists, itemDoc} = await isItemFoundByTeam(gameId, teamId, itemId);
+  const {exists, itemDoc} = await isItemFoundByTeam(game.id, teamId, itemId);
   if (exists) {
     // Update the image url for the found item
     await updateDoc(itemDoc.ref, { imageUrl: imageUrl });
@@ -71,11 +63,19 @@ async function handleNewFoundItem(file, itemId, teamId, gameId, itemPoints, item
   }
 
   // Mark the item as found
-  await _markItemAsFound(itemId, teamId, gameId, imageUrl, foundAt);
+  await _markItemAsFound(itemId, teamId, game.id, imageUrl, foundAt);
   // Add points to the team
-  await addPointsToTeam(gameId, teamId, itemPoints);
-  // Add bonus points to the team
-  await addPointsToTeam(gameId, teamId, itemBonusPoints);
+  await addPointsToTeam(game.id, teamId, itemPoints);
+
+  // Check if the item is already found by another team
+  if (_teamAlreadyFoundItem(itemId, game)) {
+    return;
+  }
+
+  if (itemBonusPoints > 0) {
+    // Add bonus points to the team if they are the first team to find it
+    await addPointsToTeam(game.id, teamId, itemBonusPoints);
+  }
 }
 
 export { getItemsByPackId, getItemById, handleNewFoundItem };
