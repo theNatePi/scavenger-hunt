@@ -26,13 +26,7 @@ export default function TeamReveal() {
     setTeamReady(false);
   };
 
-  useEffect(() => {
-    if (game?.status === 'game_started') {
-      navigate('/game');
-    }
-  }, [game?.status]);
-
-  useEffect(() => {
+  function _findTeam() {
     const nickname = player?.nickname;
     const teams = game?.teams;
 
@@ -47,6 +41,25 @@ export default function TeamReveal() {
 
     setTeam(foundTeam);
     setTeamReady(foundTeam?.teamReady);
+  }
+
+  useEffect(() => {
+    if (team === null) {
+      console.log('game', game);
+      console.log('player', player);
+      console.log('team', team);
+      _findTeam();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (game?.status === 'game_started') {
+      navigate('/game');
+    }
+  }, [game?.status]);
+
+  useEffect(() => {
+    _findTeam()
   }, [game?.teams, player?.nickname, setTeam, team]);
 
   return (

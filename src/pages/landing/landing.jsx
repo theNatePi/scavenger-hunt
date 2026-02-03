@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useGameContext } from '../../contexts/GameContext';
 import { nicknameChangeHandler, joinGameHandler, checkForAuthAndActiveGame } from './landingTools';
 import { isLoggedIn } from '../../utils/auth';
+import { activeGameForUser } from '../../utils/game/gameData';
 import GlassContainer from '../../components/glassContainer/glassContainer';
 import GlassButton from '../../components/glassButton';
 import GlassInput from '../../components/glassInput';
@@ -49,18 +50,33 @@ export default function Landing() {
     nicknameChangeHandler(e.target.value, dispatch);
   }
 
+  async function _redirectToGame(nickname) {
+    const uid = await isLoggedIn();
+    const game = await activeGameForUser(uid);
+    let path = '/game';
+    if (game.status === 'teams_loading' || game.status === 'not_started') {
+      path = '/lobby';
+    } else if (game.status === 'teams_created') {
+      path = '/lobby/teamReveal';
+    }
+
+    if (uid) {
+      setPlayer({ uid: uid, nickname: nickname ?? form.nickname });
+    } else {
+      alert('Failed to create user in _handleJoinGame, contact an admin');
+      return;
+    }
+    navigate(path);
+  }
+
   async function _handleJoinGame() {
     setGameId(null);
     setShowAdminOptions(false);
-    const success = await joinGameHandler(form, dispatch, setGameId);
+    const { success, isInGame, nickname } = await joinGameHandler(form, dispatch, setGameId);
     if (success) {
-      const uid = await isLoggedIn();
-      if (uid) {
-        setPlayer({ uid: uid, nickname: form.nickname });
-      } else {
-        alert('Failed to create user in _handleJoinGame, contact an admin');
-      }
-      navigate('/lobby');
+      await _redirectToGame(nickname);
+    } else if (isInGame) {
+      await _redirectToGame(nickname);
     }
   }
 

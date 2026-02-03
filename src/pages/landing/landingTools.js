@@ -19,14 +19,14 @@ async function joinGameHandler(form, dispatch, setGameId) {
   if (error) {
     setNicknameError(error);
     setLoading(false);
-    return false;
+    return { success: false, isInGame: false };
   }
 
   const game = await getGameByCode(typedGameCode);
   if (!game) {
     setGameCodeError('Game not found');
     setLoading(false);
-    return false;
+    return { success: false, isInGame: false };
   }
   setGameCodeError('');
 
@@ -34,20 +34,26 @@ async function joinGameHandler(form, dispatch, setGameId) {
   if (!uid) {
     setNicknameError('Failed to create user in joinGameHandler, contact an admin');
     setLoading(false);
-    return false;
+    return { success: false, isInGame: false };
   }
   setNicknameError('');
 
   if (game.players?.some(player => Object.keys(player).includes(uid))) {
-    console.log('User is already in the game');
+    const nickname = game.players.find(player => Object.keys(player).includes(uid))[uid];
+    if (game.status === 'finished') {
+      setGameCodeError('Game has already finished');
+      setLoading(false);
+      return { success: false, isInGame: false };
+    }
+    await setGameId(game.id);
     setLoading(false);
-    return false;
+    return { success: false, isInGame: true, nickname: nickname };
   }
 
   if (game.status !== 'not_started') {
     setGameCodeError('Game has already started');
     setLoading(false);
-    return false;
+    return { success: false, isInGame: false };
   }
   setGameCodeError('');
 
@@ -55,7 +61,7 @@ async function joinGameHandler(form, dispatch, setGameId) {
     if (Object.values(player).includes(nickname)) {
       setNicknameError('Nickname already taken');
       setLoading(false);
-      return false;
+      return { success: false, isInGame: false };
     }
   }
   setNicknameError('');
@@ -65,14 +71,14 @@ async function joinGameHandler(form, dispatch, setGameId) {
   } catch (err) {
     setGameCodeError('Failed to add player to game, contact an admin');
     setLoading(false);
-    return false;
+    return { success: false, isInGame: false };
   }
 
   await setGameId(game.id);
 
   setGameCodeError('');
   setLoading(false);
-  return true;
+  return { success: true, isInGame: true };
 }
 
 
