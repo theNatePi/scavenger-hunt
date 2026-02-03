@@ -20,9 +20,6 @@ export default function Game() {
     return enrichedItems;
   }, [items, game?.teams, team]);
 
-  const players = ['Player A', 'Player B', 'Player C', 'Player D'];
-  const endTime = new Date(Date.now() + 1000 * 60 * 60 * 24);
-
   return (
     <div>
       <div
@@ -30,7 +27,7 @@ export default function Game() {
           width: '100%',
         }}
       >
-        <GameStats players={players} endTime={endTime} />
+        <GameStats players={team?.playerNicknames} endTime={game?.endTime} />
         <GamePoints estimatedPoints={teamData(team?.id)?.points} />
       </div>
       <div

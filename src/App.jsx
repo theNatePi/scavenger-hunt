@@ -9,6 +9,7 @@ import Lobby from './pages/Lobby';
 import TeamReveal from './pages/teamReveal';
 import Game from './pages/Game/game';
 import GameItem from './pages/Game/GameItem';
+import GameWrapper from './pages/Game/GameWrapper';
 
 function App() {
   const queryClient = new QueryClient();
@@ -22,8 +23,8 @@ function App() {
             <Route path="/admin/createGame" element={<CreateGame />} />
             <Route path="/lobby" element={<Lobby />} />
             <Route path="/lobby/teamReveal" element={<TeamReveal />} />
-            <Route path="/game" element={<Game />} />
-            <Route path="/game/item/:id" element={<GameItem />} />
+            <Route path="/game" element={<GameWrapper><Game /></GameWrapper>} />
+            <Route path="/game/item/:id" element={<GameWrapper><GameItem /></GameWrapper>} />
             {/* <Route path="/joinLobby/teamReveal" element={<></>} />
             <Route path="/game" element={<></>} />
             <Route path="/game/item/:id" element={<></>} />

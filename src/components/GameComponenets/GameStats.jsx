@@ -7,7 +7,7 @@ export default function GameStats({ players = [], endTime } = {}) {
 
   function _formatTimeLeft(endTime) {
     const now = new Date();
-    const timeLeft = endTime - now;
+    const timeLeft = endTime.toDate() - now;
     const hours = Math.floor(timeLeft / (1000 * 60 * 60));
     const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
