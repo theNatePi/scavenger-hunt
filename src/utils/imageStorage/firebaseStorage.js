@@ -41,7 +41,9 @@ async function uploadFoundImage(file) {
   }
 
   const foundItemsCol = process.env.REACT_APP_FIREBASE_STORAGE_FOUND_ITEMS_COLLECTION || 'foundItems';
-  const storageRef = ref(storage, foundItemsCol);
+  const id = crypto.randomUUID();
+  const ext = 'jpg';
+  const storageRef = ref(storage, `${foundItemsCol}/${id}.${ext}`);
   const uploadTask = await uploadBytes(storageRef, file);
   const imageUrl = await getDownloadURL(uploadTask.ref);
   return imageUrl;
