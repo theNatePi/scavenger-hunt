@@ -5,6 +5,8 @@ import { GameProvider } from './contexts/GameContext';
 import Playground from './pages/playground';
 import Landing from './pages/landing/landing';
 import CreateGame from './pages/admin/createGame';
+import ManageGame from './pages/admin/ManageGame';
+import ReviewTeam from './pages/admin/ReviewTeam';
 import Lobby from './pages/Lobby';
 import TeamReveal from './pages/teamReveal';
 import Game from './pages/Game/game';
@@ -22,6 +24,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/admin/createGame" element={<CreateGame />} />
+            <Route path="/admin/manageGame" element={<ManageGame />} />
+            <Route path="/admin/manageGame/team/:id" element={<ReviewTeam />} />
             <Route path="/lobby" element={<Lobby />} />
             <Route path="/lobby/teamReveal" element={<TeamReveal />} />
             <Route path="/game" element={<GameWrapper><Game /></GameWrapper>} />

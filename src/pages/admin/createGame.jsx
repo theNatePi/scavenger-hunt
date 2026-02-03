@@ -1,4 +1,5 @@
 import { useEffect, useReducer, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useGameContext } from '../../contexts/GameContext';
 import { createGame } from '../../utils/game/gameData';
 import { ReactComponent as CopyIcon } from '../../assets/copyIcon.svg';
@@ -40,6 +41,7 @@ export default function CreateGame() {
   const [form, dispatch] = useReducer(formReducer, initialForm);
   const { game, setGameId, actions } = useGameContext();
   const teamsUnsubRef = useRef(null);
+  const navigate = useNavigate();
 
   // Cleanup the teams listener if we leave this page.
   useEffect(() => {
@@ -131,9 +133,10 @@ export default function CreateGame() {
     }
   }
 
-  function _handleStartGame() {
-    actions.updateGame({ endTime: new Date(form.endTime) });
-    actions.updateGame({ status: 'game_started' });
+  async function _handleStartGame() {
+    await actions.updateGame({ endTime: new Date(form.endTime) });
+    await actions.updateGame({ status: 'game_started' });
+    navigate('/admin/manageGame');
   }
 
   return (

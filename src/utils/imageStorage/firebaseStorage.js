@@ -17,8 +17,8 @@ async function getPackImages(packId) {
 
 async function getImageById(packId, itemFile) {
   const storageRef = ref(storage, `packs/${packId}/${itemFile}`);
-  const snapshot = await getDownloadURL(storageRef);
-  return snapshot;
+  const url = await getDownloadURL(storageRef);
+  return url;
 }
 
 

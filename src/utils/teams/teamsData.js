@@ -36,6 +36,7 @@ async function uploadTeamsToGame(gameId, teams, { onTeams, onError } = {}) {
       playerNicknames: team.map((player) => Object.values(player)[0]),
       teamReady: false,
       points: 0,
+      pointsActual: 0,
     };
 
     // Auto-ID per team doc, but committed together.

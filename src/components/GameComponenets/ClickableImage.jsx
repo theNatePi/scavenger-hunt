@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import GlassContainer from '../glassContainer/glassContainer';
 import GlassButton from '../glassButton';
 
-export default function ClickableImage({ imgUri, alt, style }) {
+export default function ClickableImage({ imgUri, alt, style, showMessage = true }) {
   const [showImage, setShowImage] = useState(false);
   const overlay = showImage && (
     <div
@@ -43,27 +43,29 @@ export default function ClickableImage({ imgUri, alt, style }) {
               marginBottom: '20px',
             }}
           >
-            <GlassContainer
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '55px',
-                padding: '0 25px',
-                margin: '0',
-                backgroundColor: 'var(--confirm-color-transparent)',
-              }}
-            >
-              <p
+            {showMessage && (
+              <GlassContainer
                 style={{
-                  fontSize: '15px',
-                  color: 'var(--primary-color)',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '55px',
+                  padding: '0 25px',
+                  margin: '0',
+                  backgroundColor: 'var(--confirm-color-transparent)',
                 }}
               >
-                Find this item in the game area
-              </p>
-            </GlassContainer>
+                <p
+                  style={{
+                    fontSize: '15px',
+                    color: 'var(--primary-color)',
+                  }}
+                >
+                  Find this item in the game area
+                </p>
+              </GlassContainer>
+            )}
             <GlassButton
               onClick={() => setShowImage(false)}
               style={{

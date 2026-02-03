@@ -79,4 +79,16 @@ async function handleNewFoundItem(file, itemId, teamId, game, itemPoints, itemBo
   }
 }
 
-export { getItemsByPackId, getItemById, handleNewFoundItem };
+async function setItemVerification(itemId, teamId, gameId, isVerified) {
+  if (!itemId || !teamId || !gameId) {
+    return null;
+  }
+
+  const gamesCol = process.env.REACT_APP_FIREBASE_GAMES_COLLECTION || 'games';
+  const teamsCol = process.env.REACT_APP_FIREBASE_TEAMS_COLLECTION || 'teams';
+  const foundItemsCol = process.env.REACT_APP_FIREBASE_FOUND_ITEMS_COLLECTION || 'foundItems';
+  const itemsRef = doc(db, gamesCol, gameId, teamsCol, teamId, foundItemsCol, itemId);
+  await updateDoc(itemsRef, { verified: isVerified });
+}
+
+export { getItemsByPackId, getItemById, handleNewFoundItem, setItemVerification };

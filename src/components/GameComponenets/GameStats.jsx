@@ -31,49 +31,52 @@ export default function GameStats({ players = [], endTime } = {}) {
           alignItems: 'center',
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'start',
-            width: '95%',
-          }}
-        >
-          <p
-            style={{
-              fontSize: '20px',
-              fontWeight: 'bold',
-              color: 'var(--primary-color)',
-            }}
-          >
-            Team:
-          </p>
-          <p
-            style={{
-              fontSize: '15px',
-              color: 'var(--primary-color)',
-              width: '50%',
-              textAlign: 'right',
-              marginTop: '4px',
-            }}
-          >
-            {playerList.join(', ')}
-          </p>
-        </div>
+        {playerList.length > 0 && (
+          <>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'start',
+                width: '95%',
+              }}
+            >
+              <p
+                style={{
+                  fontSize: '20px',
+                  fontWeight: 'bold',
+                  color: 'var(--primary-color)',
+                }}
+              >
+                Team:
+              </p>
+              <p
+                style={{
+                  fontSize: '15px',
+                  color: 'var(--primary-color)',
+                  width: '50%',
+                  textAlign: 'right',
+                  marginTop: '4px',
+                }}
+              >
+                {playerList.join(', ')}
+              </p>
+            </div>
 
-        <div 
-          style={{
-            width: '100%',
-            height: '2px',
-            borderRadius: '1px',
-            backgroundColor: 'var(--primary-color)',
-            opacity: '0.3',
-            marginTop: '10px',
-            marginBottom: '10px',
-          }}
-        />
-
+            <div 
+              style={{
+                width: '100%',
+                height: '2px',
+                borderRadius: '1px',
+                backgroundColor: 'var(--primary-color)',
+                opacity: '0.3',
+                marginTop: '10px',
+                marginBottom: '10px',
+              }}
+            />
+          </>
+          )}
         <div
           style={{
             display: 'flex',
