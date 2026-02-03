@@ -9,7 +9,7 @@ export default function GameWrapper({ children }) {
   function _redirectIfGameOver(endTime) {
     const now = new Date();
     if (endTime.toDate() < now) {
-      navigate('/');
+      navigate('/game/gameOver');
     }
   }
 
