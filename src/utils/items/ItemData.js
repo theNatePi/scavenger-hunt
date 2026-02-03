@@ -41,6 +41,7 @@ async function _markItemAsFound(itemId, teamId, gameId, imageUrl, foundAt) {
     itemId: itemId,
     imageUrl: imageUrl,
     foundAt: foundAt,
+    verified: false,
   });
 }
 
