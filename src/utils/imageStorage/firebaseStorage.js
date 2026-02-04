@@ -1,6 +1,7 @@
 import { ref, listAll, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage, db } from '../../config/firebase';
 import { doc, getDoc } from 'firebase/firestore';
+import { compressImageToTargetSize } from '../tools';
 
 async function getPackImages(packId) {
   const storageRef = ref(storage, `packs/${packId}`);
@@ -35,16 +36,26 @@ async function getFoundImageById(teamId, itemId, gameId) {
 }
 
 
+
 async function uploadFoundImage(file) {
   if (!file) {
     return null;
+  }
+
+  let uploadFile = file;
+  try {
+    const compressedBlob = await compressImageToTargetSize(file);
+    uploadFile = compressedBlob;
+  } catch (error) {
+    console.error('Error compressing image:', error);
+    uploadFile = file;
   }
 
   const foundItemsCol = process.env.REACT_APP_FIREBASE_STORAGE_FOUND_ITEMS_COLLECTION || 'foundItems';
   const id = crypto.randomUUID();
   const ext = 'jpg';
   const storageRef = ref(storage, `${foundItemsCol}/${id}.${ext}`);
-  const uploadTask = await uploadBytes(storageRef, file);
+  const uploadTask = await uploadBytes(storageRef, uploadFile);
   const imageUrl = await getDownloadURL(uploadTask.ref);
   return imageUrl;
 }
