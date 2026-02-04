@@ -1,12 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import GlassContainer from '../glassContainer/glassContainer';
 import GlassButton from '../glassButton';
 import ClickableImage from './ClickableImage';
 
 export default function ItemCard({ itemId, itemImgUri, points, bonusPoints, teamsFound, isFound, foundImgUri}) {
-  const [showFoundImage, setShowFoundImage] = useState(foundImgUri ? true : false);
+  const [showFoundImage, setShowFoundImage] = useState(isFound);
   const cardColor = isFound ? 'var(--confirm-color-transparent)' : 'var(--not-found-color)';
   const cardGradient = isFound ? 'var(--found-gradient)' : 'var(--not-found-gradient)';
+
+  useEffect(() => {
+    setShowFoundImage(isFound);
+  }, [isFound]);
 
   return (
     <GlassContainer
