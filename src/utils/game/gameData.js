@@ -30,6 +30,14 @@ async function getGameByCode(gameCode) {
 }
 
 
+async function getGameByAdminCode(adminCode) {
+  const gamesRef = collection(db, process.env.REACT_APP_FIREBASE_GAMES_COLLECTION);
+  const q = query(gamesRef, where('adminCode', '==', adminCode), limit(1));
+  const snapshot = await getDocs(q);
+  return { ...snapshot.docs[0]?.data() ?? null, id: snapshot.docs[0]?.id };
+}
+
+
 async function addPlayerToGame(gameCode, playerUID, nickname) {
   const gamesRef = collection(db, process.env.REACT_APP_FIREBASE_GAMES_COLLECTION);
   const q = query(gamesRef, where('code', '==', gameCode), limit(1));
@@ -53,4 +61,4 @@ async function activeGameForUser(userUID) {
   return null;
 }
 
-export { createGame, getGameByCode, addPlayerToGame, activeGameForUser };
+export { createGame, getGameByCode, getGameByAdminCode, addPlayerToGame, activeGameForUser };

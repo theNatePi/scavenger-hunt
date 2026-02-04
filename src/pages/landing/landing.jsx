@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useGameContext } from '../../contexts/GameContext';
 import { nicknameChangeHandler, joinGameHandler, checkForAuthAndActiveGame } from './landingTools';
 import { isLoggedIn } from '../../utils/auth';
-import { activeGameForUser } from '../../utils/game/gameData';
+import { activeGameForUser, getGameByAdminCode } from '../../utils/game/gameData';
 import GlassContainer from '../../components/glassContainer/glassContainer';
 import GlassButton from '../../components/glassButton';
 import GlassInput from '../../components/glassInput';
@@ -88,8 +88,15 @@ export default function Landing() {
     navigate('/admin/createGame');
   }
 
-  function _handleManageGame() {
-    alert('Not Yet Implemented');
+  async function _handleManageGame() {
+    const adminCode = prompt('Admin Code');
+    const game = await getGameByAdminCode(adminCode);
+    if (!game?.id) {
+      alert('Invalid admin code');
+      return;
+    }
+    setGameId(game.id);
+    navigate(`/admin/manageGame`);
   }
 
   return (
