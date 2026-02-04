@@ -7,6 +7,7 @@ import { activeGameForUser, getGameByAdminCode } from '../../utils/game/gameData
 import GlassContainer from '../../components/glassContainer/glassContainer';
 import GlassButton from '../../components/glassButton';
 import GlassInput from '../../components/glassInput';
+import Footer from '../../components/Footer';
 
 const initialForm = {
   nickname: '',
@@ -197,6 +198,7 @@ export default function Landing() {
           </GlassButton>
         )
       } 
+      <Footer />
     </div>
   );
 }
