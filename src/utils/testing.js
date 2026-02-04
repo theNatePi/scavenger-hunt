@@ -1,4 +1,4 @@
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
 async function fillPlayers(gameId, numPlayers) {
@@ -27,4 +27,23 @@ async function fillPlayers(gameId, numPlayers) {
   await updateDoc(gameRef, { players });
 }
 
-export { fillPlayers };
+
+/**
+ * Creates Firestore documents for items from startItemId to endItemId (inclusive)
+ * at /packs/<packName>/items/<id>, each with points, bonusPoints, and imageFile.
+ */
+async function addItemPoints(packName, startItemId, endItemId, points, bonusPoints) {
+  const packsCol = process.env.REACT_APP_FIREBASE_PACKS_COLLECTION || 'packs';
+  const itemsCol = process.env.REACT_APP_FIREBASE_ITEMS_COLLECTION || 'items';
+
+  for (let id = startItemId; id <= endItemId; id++) {
+    const itemRef = doc(db, packsCol, packName, itemsCol, String(id));
+    await setDoc(itemRef, {
+      points: points,
+      bonusPoints: bonusPoints,
+      imageFile: `${id}.jpg`,
+    });
+  }
+}
+
+export { fillPlayers, addItemPoints };

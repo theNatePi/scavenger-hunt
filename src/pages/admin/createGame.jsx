@@ -5,7 +5,7 @@ import { createGame } from '../../utils/game/gameData';
 import { ReactComponent as CopyIcon } from '../../assets/copyIcon.svg';
 import { createTeams } from '../../utils/teams/teamsTools';
 import { uploadTeamsToGame } from '../../utils/teams/teamsData';
-import { fillPlayers } from '../../utils/testing';
+import { fillPlayers, addItemPoints } from '../../utils/testing';
 import GlassButton from '../../components/glassButton';
 import GlassContainer from '../../components/glassContainer/glassContainer';
 import GlassInput from '../../components/glassInput';
@@ -235,6 +235,7 @@ export default function CreateGame() {
             <GlassButton style={{ backgroundColor: 'var(--confirm-color-transparent)' }} onClick={_handleStartGame} isLoading={form.isLoading}>Start Game</GlassButton>
           )}
           <button onClick={() => fillPlayers(game.id, 10)}>FOR TESTING: Fill Game</button>
+          {/* <button onClick={() => addItemPoints('uci-all-hands', 1, 30, 2, 3)}>FOR TESTING: Add Item Points</button> */}
         </>
       )}
     </div>
