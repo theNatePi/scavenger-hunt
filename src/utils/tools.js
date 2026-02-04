@@ -8,7 +8,7 @@ function shuffle(array) {
 }
 
 
-async function compressImageToTargetSize(file, targetBytes = 200 * 1024) {
+async function compressImageToTargetSize(file, targetBytes = 400 * 1024) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const objectUrl = URL.createObjectURL(file);
@@ -17,7 +17,9 @@ async function compressImageToTargetSize(file, targetBytes = 200 * 1024) {
       URL.revokeObjectURL(objectUrl);
 
       const canvas = document.createElement('canvas');
-      let { width, height } = img;
+      const ctx = canvas.getContext('2d');
+      let width = img.width;
+      let height = img.height;
 
       const maxDimension = 1920;
       if (width > maxDimension || height > maxDimension) {
@@ -26,12 +28,11 @@ async function compressImageToTargetSize(file, targetBytes = 200 * 1024) {
         height = Math.round(height * ratio);
       }
 
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, width, height);
+      const drawAndTryBlob = (quality) => {
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
 
-      const tryBlob = (quality) => {
         canvas.toBlob(
           (blob) => {
             if (!blob) {
@@ -42,13 +43,24 @@ async function compressImageToTargetSize(file, targetBytes = 200 * 1024) {
               resolve(blob);
               return;
             }
-            tryBlob(Math.max(0.1, quality - 0.1));
+            if (quality > 0.1) {
+              drawAndTryBlob(Math.max(0.1, quality - 0.1));
+            } else {
+              // Quality at minimum and still too big: scale down dimensions and retry
+              width = Math.round(width * 0.75);
+              height = Math.round(height * 0.75);
+              if (width < 64 || height < 64) {
+                resolve(blob); // accept best effort
+                return;
+              }
+              drawAndTryBlob(0.9);
+            }
           },
-          'image/jpg',
+          'image/jpeg',
           quality
         );
       };
-      tryBlob(0.9);
+      drawAndTryBlob(0.9);
     };
     img.onerror = () => {
       URL.revokeObjectURL(objectUrl);
