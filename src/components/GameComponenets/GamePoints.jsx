@@ -49,7 +49,7 @@ export default function GamePoints({ estimatedPoints, style }) {
           />
           <p
             style={{
-              fontSize: '20px',
+              fontSize: '15px',
               fontWeight: 'bold',
               color: 'var(--primary-color)',
             }}

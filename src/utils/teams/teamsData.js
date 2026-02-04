@@ -82,6 +82,14 @@ async function addPointsToTeam(gameId, teamId, points) {
 }
 
 
+async function updateTeamPointsActual(gameId, teamId, points) {
+  const gamesCol = process.env.REACT_APP_FIREBASE_GAMES_COLLECTION || 'games';
+  const teamsCol = process.env.REACT_APP_FIREBASE_TEAMS_COLLECTION || 'teams';
+  const teamsRef = doc(db, gamesCol, gameId, teamsCol, teamId);
+  await updateDoc(teamsRef, { pointsActual: points });
+}
+
+
 async function isItemFoundByTeam(gameId, teamId, itemId) {
   const gamesCol = process.env.REACT_APP_FIREBASE_GAMES_COLLECTION || 'games';
   const teamsCol = process.env.REACT_APP_FIREBASE_TEAMS_COLLECTION || 'teams';
@@ -91,4 +99,4 @@ async function isItemFoundByTeam(gameId, teamId, itemId) {
   return {exists: itemData.exists(), itemDoc: itemData};
 }
 
-export { uploadTeamsToGame, subscribeTeamsForGame, addPointsToTeam, isItemFoundByTeam };
+export { uploadTeamsToGame, subscribeTeamsForGame, addPointsToTeam, isItemFoundByTeam, updateTeamPointsActual };

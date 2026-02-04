@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import GlassButton from '../glassButton';
 
-export default function TeamListItem({ team }) {
+export default function TeamListItem({ team, actualPoints }) {
   const navigate = useNavigate();
   
   return (

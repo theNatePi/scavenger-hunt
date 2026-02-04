@@ -1,5 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useGameContext } from '../../contexts/GameContext';
+import { calculateAllTeamPoints } from '../../utils/game/pointsCalc';
+import { updateTeamPointsActual } from '../../utils/teams/teamsData';
 import GlassContainer from '../../components/glassContainer/glassContainer';
 import GlassButton from '../../components/glassButton';
 import GameStats from '../../components/GameComponenets/GameStats';
@@ -17,6 +19,14 @@ export default function ManageGame() {
     }, 1000);
     return () => clearInterval(interval);
   }, [game?.endTime]);
+
+
+  async function _calculateActualPoints() {
+    const verifiedTeamPoints = await calculateAllTeamPoints(game);
+    for (const teamId in verifiedTeamPoints) {
+      await updateTeamPointsActual(game.id, teamId, verifiedTeamPoints[teamId]);
+    }
+  }
 
   return (
     <div>
@@ -43,6 +53,7 @@ export default function ManageGame() {
         ))}
       </div>
       <GlassButton
+        onClick={_calculateActualPoints}
         style={{
           backgroundColor: 'var(--confirm-color-transparent)'
         }}
